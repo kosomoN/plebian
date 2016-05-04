@@ -1,4 +1,4 @@
-#include "include\renderer\window.h"
+#include "include/renderer/window.h"
 #include <stdlib.h>
 
 int main(void) {

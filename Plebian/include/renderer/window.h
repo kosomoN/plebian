@@ -3,8 +3,8 @@
 
 class Window {
 public:
-	Window::Window();
-	Window::~Window();
+	Window::Window() {};
+	Window::~Window() {};
 
 	static void Create();
 };

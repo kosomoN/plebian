@@ -1,15 +1,10 @@
-#include "include\renderer\window.h"
+#include "include/renderer/window.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <GLFW\glfw3.h>
-#include "include\globalsystem.h"
+#include <GLFW/glfw3.h>
+#include "include/globalsystem.h"
 
-GlobalSystem* gSys;
-
-Window::Window() {}
-
-
-Window::~Window() {}
+GlobalSystem* g_sys;
 
 static void error_callback(int error, const char* description)
 {
@@ -31,12 +26,12 @@ void Window::Create() {
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 
-	gSys = new GlobalSystem;
-	gSys->p_window = window;
-	gSys->Init();
+	g_sys = new GlobalSystem;
+	g_sys->p_window = window;
+	g_sys->Init();
 
 	while (!glfwWindowShouldClose(window)) {
-		gSys->Update();
+		g_sys->Update();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
