@@ -15,7 +15,9 @@ struct GlobalSystem {
 	void Update() {};
 
 	template <class T>
-	void Log(const T& obj, const char* format, ...);
+	void LogInfo(const T& obj, const char* format, ...);
+	template <class T>
+	void LogWarn(const T& obj, const char* format, ...);
 	template <class T>
 	void LogError(const T& obj, const char* format, ...);
 };
