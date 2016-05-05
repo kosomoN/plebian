@@ -1,8 +1,7 @@
-#include "include/renderer/window.h"
+#include "renderer/window.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <GLFW/glfw3.h>
-#include "include/globalsystem.h"
+#include "globalsystem.h"
 
 GlobalSystem* g_sys;
 
@@ -24,7 +23,11 @@ void Window::Create() {
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1);
+	GLenum err = glewInit();
+	if (GLEW_OK != err)
+	{
+		LogError(NULL, "Error: %s\n", glewGetErrorString(err));
+	}
 
 	g_sys = new GlobalSystem;
 	g_sys->p_window = window;
