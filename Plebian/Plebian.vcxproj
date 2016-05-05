@@ -151,11 +151,14 @@
   <ItemGroup>
     <ClCompile Include="globalsystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderer\meshloader.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h" />
+    <ClInclude Include="renderer\mesh.h" />
+    <ClInclude Include="renderer\meshloader.h" />
     <ClInclude Include="renderer\window.h" />
     <ClInclude Include="renderer\shader.h" />
   </ItemGroup>
