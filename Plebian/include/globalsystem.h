@@ -2,8 +2,9 @@
 #define GLOBALSYSTEM_H_
 #include <GLFW/glfw3.h>
 #include <string>
-#include <time.h>
 #include <iostream>
+#include <stdarg.h>
+#include <time.h>
 
 struct GlobalSystem {
 	GlobalSystem::GlobalSystem() {};
@@ -13,17 +14,13 @@ struct GlobalSystem {
 
 	void Init() {};
 	void Update() {};
-
-	template <class T>
-	void LogInfo(const T& obj, const char* format, ...);
-	template <class T>
-	void LogWarn(const T& obj, const char* format, ...);
-	template <class T>
-	void LogError(const T& obj, const char* format, ...);
 };
 
 extern GlobalSystem* g_sys;
 
+void LogInfo(const char* format, ...);
+void LogWarn(const char* format, ...);
+void LogError(const char* format, ...);
 
 #endif
 
