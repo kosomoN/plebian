@@ -11,7 +11,7 @@ public:
 
 	GLuint m_shader_program = 0;
 private:
-	std::string LoadTextFile(std::string path);
+	GLuint LoadShader(std::string& content, GLenum shader_type);
 };
 
 #endif // SHADER_H_

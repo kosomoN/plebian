@@ -9,52 +9,77 @@
 
 #include "globalsystem.h"
 
-bool Shader::Init(std::string name) {
-	std::string shader_file = LoadTextFile(name);
-	if (shader_file.empty()) {
-		LogError("Empty shader file: %s", name.c_str());
-		return false;
-	}
-	size_t split_pos = shader_file.find("@");
-	std::string vertex_content = shader_file.substr(0, split_pos);
-	std::string fragment_content = shader_file.substr(split_pos + 1);
-	const char* v = vertex_content.c_str();
-	const char* f = fragment_content.c_str();
-	
-	//Create shaders
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &v, NULL);
-	glCompileShader(vs);
-	GLint status;
-	glGetShaderiv(vs, GL_COMPILE_STATUS, &status);
-	if (!status) {
-		GLint log_length = 0;
-		glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &log_length);
-		std::vector<GLchar> log(log_length);
-		glGetShaderInfoLog(vs, log_length, &log_length, &log[0]);
-		LogError("Error compiling vert shader: %s\n%s", name, log.data());
-		glDeleteShader(vs);
-		return false;
-	}
+#define SHADER_PATH "assets/shaders/"
 
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &f, NULL);
-	glCompileShader(fs);
-	glGetShaderiv(fs, GL_COMPILE_STATUS, &status);
-	if (!status) {
-		GLint log_length = 0;
-		glGetShaderiv(fs, GL_INFO_LOG_LENGTH, &log_length);
-		std::vector<GLchar> log(log_length);
-		glGetShaderInfoLog(fs, log_length, &log_length, &log[0]);
-		LogError("Error compiling frag shader: %s\n%s", name, log);
-		glDeleteShader(fs);
-		glDeleteShader(vs);
+bool Shader::Init(std::string name) {
+	std::ifstream file(SHADER_PATH + name);
+	if (!file.is_open()) {
+		LogError("Error opening file: %s", (SHADER_PATH + name).c_str());
 		return false;
 	}
 
 	m_shader_program = glCreateProgram();
-	glAttachShader(m_shader_program, fs);
-	glAttachShader(m_shader_program, vs);
+
+	std::vector<GLuint> shaders;
+	std::stringstream shader_data;
+	std::string line;
+	GLenum shader_type = 0;
+	while (std::getline(file, line)) {
+		if (line[0] == '@') {
+			if (shader_type != 0) {
+				GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
+				if (loaded_shader == 0) {
+					for each (GLuint shader in shaders) {
+						glDetachShader(m_shader_program, shader);
+						glDeleteShader(shader);
+					}
+					glDeleteProgram(m_shader_program);
+					m_shader_program = 0;
+					file.close();
+					return false;
+				}
+				shaders.push_back(loaded_shader);
+			}
+
+			shader_data.str(std::string());
+			if (line == "@vertex")
+				shader_type = GL_VERTEX_SHADER;
+			else if (line == "@fragment")
+				shader_type = GL_FRAGMENT_SHADER;
+			else if (line == "@geometry")
+				shader_type = GL_GEOMETRY_SHADER;
+			else if (line == "@tess_evaluation")
+				shader_type = GL_TESS_EVALUATION_SHADER;
+			else if (line == "@tess_control")
+				shader_type = GL_TESS_CONTROL_SHADER;
+		} else {
+			shader_data << line << "\n";
+		}
+	}
+	if (shader_type != 0) {
+		GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
+		if (loaded_shader == 0) {
+			for each (GLuint shader in shaders) {
+				glDetachShader(m_shader_program, shader);
+				glDeleteShader(shader);
+			}
+			glDeleteProgram(m_shader_program);
+			m_shader_program = 0;
+			file.close();
+			return false;
+		}
+		shaders.push_back(loaded_shader);
+	}
+
+	if (shaders.empty()) {
+		LogError("No shaders loaded from %s", (SHADER_PATH + name).c_str());
+		glDeleteProgram(m_shader_program);
+		m_shader_program = 0;
+		file.close();
+		return false;
+	}
+
+	GLint status;
 	glLinkProgram(m_shader_program);
 	glGetProgramiv(m_shader_program, GL_LINK_STATUS, &status);
 	if (!status) {
@@ -62,29 +87,44 @@ bool Shader::Init(std::string name) {
 		glGetProgramiv(m_shader_program, GL_INFO_LOG_LENGTH, &log_length);
 		std::vector<char> log(log_length);
 		glGetProgramInfoLog(m_shader_program, log_length, &log_length, &log[0]);
-		LogError("Error linking shader: %s\n%s", name, log.data());
+		LogError("Error linking shader: %s\n%s", (SHADER_PATH + name).c_str(), log.data());
+		for each (GLuint shader in shaders) {
+			glDetachShader(m_shader_program, shader);
+			glDeleteShader(shader);
+		}
 		glDeleteProgram(m_shader_program);
 		m_shader_program = 0;
-		glDeleteShader(vs);
-		glDeleteShader(fs);
+		file.close();
 		return false;
 	}
-	glDetachShader(m_shader_program, vs);
-	glDetachShader(m_shader_program, fs);
-	glDeleteShader(vs);
-	glDeleteShader(fs);
+
+	for each (GLuint shader in shaders) {
+		glDetachShader(m_shader_program, shader);
+		glDeleteShader(shader);
+	}
+	file.close();
 
 	return true;
 }
 
-std::string Shader::LoadTextFile(std::string file_path) {
-	std::ifstream file(file_path);
-	if (!file.is_open()) {
-		LogError("Error opening file: %s", file_path.c_str());
-		return "";
+GLuint Shader::LoadShader(std::string& content, GLenum shader_type) {
+	GLuint shader_id = glCreateShader(shader_type);
+	const char* p_content = content.c_str();
+	glShaderSource(shader_id, 1, &p_content, NULL);
+	glCompileShader(shader_id);
+	GLint status;
+	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
+	if (!status) {
+		GLint log_length = 0;
+		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
+		std::vector<GLchar> log(log_length);
+		glGetShaderInfoLog(shader_id, log_length, &log_length, &log[0]);
+		LogError("Error compiling shader: %s", log.data());
+		glDeleteShader(shader_id);
+		return 0;
 	}
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-	file.close();
-	return buffer.str();
+
+	glAttachShader(m_shader_program, shader_id);
+	return shader_id;
 }
+
