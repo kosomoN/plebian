@@ -156,6 +156,7 @@
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components.h" />
     <ClInclude Include="globalsystem.h" />
     <ClInclude Include="renderer\mesh.h" />
     <ClInclude Include="renderer\meshloader.h" />
