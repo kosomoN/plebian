@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{6de798e5-67a8-4d06-8fea-673e7ac55f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\io">
+      <UniqueIdentifier>{213f799f-23d9-4d94-ac77-3da4b34a5e59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -34,7 +37,10 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="renderer\meshloader.cpp">
-      <Filter>Source Files\Rendering</Filter>
+      <Filter>Source Files\io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\textureloader.cpp">
+      <Filter>Source Files\io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,7 +56,19 @@
     <ClInclude Include="renderer\mesh.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="renderer\meshloader.h">
+      <Filter>Source Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\textureloader.h">
+      <Filter>Source Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
