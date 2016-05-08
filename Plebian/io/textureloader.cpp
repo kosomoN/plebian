@@ -13,7 +13,7 @@ Texture* TextureLoader::GetTexture(std::string fn) {
 	unsigned int width, height;
 	std::vector<unsigned char> data;
 
-	auto e = lodepng::decode(data, width, height, fn.c_str());
+	auto e = lodepng::decode(data, width, height, (TEXTURE_PATH + fn).c_str());
 
 	if (e != 0)
 		LogError("Failed to load texture %s", fn.c_str());
