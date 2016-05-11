@@ -1,7 +1,7 @@
 #ifndef MESH_H_
 #define MESH_H_
 
-#include <gl/glew.h>
+#include <GL/glew.h>
 
 struct Mesh {
 	GLuint vertex_buffer;

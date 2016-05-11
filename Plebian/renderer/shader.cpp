@@ -5,7 +5,7 @@
 #include <sstream>
 #include <vector>
 
-#include <gl/glew.h>
+#include <GL/glew.h>
 
 #include "globalsystem.h"
 

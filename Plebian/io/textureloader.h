@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include <gl/glew.h>
+#include <GL/glew.h>
 
 #include "renderer/texture.h"
 

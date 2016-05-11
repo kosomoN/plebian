@@ -1,6 +1,6 @@
 #include "textureloader.h"
 
-#include <lodepng\lodepng.hpp>
+#include <lodepng/lodepng.hpp>
 
 #include "globalsystem.h"
 
