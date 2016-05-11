@@ -2,7 +2,7 @@
 
 #include <lodepng\lodepng.hpp>
 
-#include "../globalsystem.h"
+#include "globalsystem.h"
 
 #define TEXTURE_PATH "assets/textures/"
 
@@ -15,14 +15,16 @@ Texture* TextureLoader::GetTexture(std::string fn) {
 
 	auto e = lodepng::decode(data, width, height, (TEXTURE_PATH + fn).c_str());
 
-	if (e != 0)
+	if (e != 0) {
 		LogError("Failed to load texture %s", fn.c_str());
+		return nullptr;
+	}
 
 	Texture* p_tex = new Texture;
 
 	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &p_tex->textue_id);
-	glBindTexture(GL_TEXTURE_2D, p_tex->textue_id);
+	glGenTextures(1, &p_tex->texture_id);
+	glBindTexture(GL_TEXTURE_2D, p_tex->texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);

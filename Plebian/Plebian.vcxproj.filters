@@ -68,7 +68,7 @@
     <ClInclude Include="io\textureloader.h">
       <Filter>Source Files\io</Filter>
     </ClInclude>
-    <ClInclude Include="texture.h">
+    <ClInclude Include="renderer\texture.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

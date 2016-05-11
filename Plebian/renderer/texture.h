@@ -4,7 +4,7 @@
 #include <GL\glew.h>
 
 struct Texture {
-	GLuint textue_id;
+	GLuint texture_id;
 };
 
 #endif

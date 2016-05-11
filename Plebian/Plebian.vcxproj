@@ -162,10 +162,10 @@
     <ClInclude Include="io\textureloader.h" />
     <ClInclude Include="renderer\mesh.h" />
     <ClInclude Include="renderer\meshloader.h" />
+    <ClInclude Include="renderer\texture.h" />
     <ClInclude Include="renderer\window.h" />
     <ClInclude Include="renderer\shader.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
