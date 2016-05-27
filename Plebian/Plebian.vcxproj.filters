@@ -71,5 +71,11 @@
     <ClInclude Include="renderer\texture.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="system\scene_interface.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\camera_interface.h">
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
