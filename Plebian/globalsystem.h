@@ -20,9 +20,5 @@ struct GlobalSystem {
 
 extern GlobalSystem* g_sys;
 
-void LogInfo(const char* format, ...);
-void LogWarn(const char* format, ...);
-void LogError(const char* format, ...);
-
 #endif
 

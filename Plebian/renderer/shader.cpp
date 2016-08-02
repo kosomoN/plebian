@@ -7,14 +7,14 @@
 
 #include <GL/glew.h>
 
-#include "globalsystem.h"
+#include "log.h"
 
 #define SHADER_PATH "assets/shaders/"
 
 bool Shader::Init(std::string name) {
 	std::ifstream file(SHADER_PATH + name);
 	if (!file.is_open()) {
-		LogError("Error opening file: %s", (SHADER_PATH + name).c_str());
+		Log(Error, "Error opening file: %s", (SHADER_PATH + name).c_str());
 		return false;
 	}
 
@@ -72,7 +72,7 @@ bool Shader::Init(std::string name) {
 	}
 
 	if (shaders.empty()) {
-		LogError("No shaders loaded from %s", (SHADER_PATH + name).c_str());
+		Log(Error, "No shaders loaded from %s", (SHADER_PATH + name).c_str());
 		glDeleteProgram(m_shader_program);
 		m_shader_program = 0;
 		file.close();
@@ -87,7 +87,7 @@ bool Shader::Init(std::string name) {
 		glGetProgramiv(m_shader_program, GL_INFO_LOG_LENGTH, &log_length);
 		std::vector<char> log(log_length);
 		glGetProgramInfoLog(m_shader_program, log_length, &log_length, &log[0]);
-		LogError("Error linking shader: %s\n%s", (SHADER_PATH + name).c_str(), log.data());
+		Log(Error, "Error linking shader: %s\n%s", (SHADER_PATH + name).c_str(), log.data());
 		for each (GLuint shader in shaders) {
 			glDetachShader(m_shader_program, shader);
 			glDeleteShader(shader);
@@ -119,7 +119,7 @@ GLuint Shader::LoadShader(std::string& content, GLenum shader_type) {
 		glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
 		std::vector<GLchar> log(log_length);
 		glGetShaderInfoLog(shader_id, log_length, &log_length, &log[0]);
-		LogError("Error compiling shader: %s", log.data());
+		Log(Error, "Error compiling shader: %s", log.data());
 		glDeleteShader(shader_id);
 		return 0;
 	}

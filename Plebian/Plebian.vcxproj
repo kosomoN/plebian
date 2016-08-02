@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="globalsystem.cpp" />
     <ClCompile Include="io\textureloader.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer\meshloader.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Components.h" />
     <ClInclude Include="globalsystem.h" />
     <ClInclude Include="io\textureloader.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="renderer\camera_interface.h" />
     <ClInclude Include="renderer\mesh.h" />
     <ClInclude Include="renderer\meshloader.h" />

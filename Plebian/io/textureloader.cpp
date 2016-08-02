@@ -2,7 +2,7 @@
 
 #include <lodepng/lodepng.hpp>
 
-#include "globalsystem.h"
+#include "log.h"
 
 #define TEXTURE_PATH "assets/textures/"
 
@@ -10,13 +10,15 @@ Texture* TextureLoader::GetTexture(std::string fn) {
 	if (m_textures.count(fn))
 		return m_textures[fn];
 
+	Log(Info, "Loading texture: %s", fn.c_str());
+
 	unsigned int width, height;
 	std::vector<unsigned char> data;
 
-	auto e = lodepng::decode(data, width, height, (TEXTURE_PATH + fn).c_str());
+	unsigned int e = lodepng::decode(data, width, height, (TEXTURE_PATH + fn).c_str());
 
 	if (e != 0) {
-		LogError("Failed to load texture %s", fn.c_str());
+		Log(Error, "Failed to load texture %s", fn.c_str());
 		return nullptr;
 	}
 

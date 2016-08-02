@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "globalsystem.h"
+#include "log.h"
 
 GlobalSystem* g_sys;
 
@@ -26,7 +27,7 @@ void Window::Create() {
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		LogError(NULL, "Error: %s\n", glewGetErrorString(err));
+		Log(Error, NULL, "Error: %s\n", glewGetErrorString(err));
 	}
 
 	g_sys = new GlobalSystem;

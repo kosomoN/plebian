@@ -4,24 +4,25 @@
 #include <tinyobj/tiny_obj_loader.h>
 
 #include "globalsystem.h"
+#include "log.h"
 
 #define MESH_PATH "assets/meshes/"
 
 Mesh* MeshLoader::GetMesh(std::string name) {
 	if (!meshes.count(name)) {
-		LogInfo("Loading mesh: %s", name.c_str());
+		Log(Info, "Loading mesh: %s", name.c_str());
 
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
 		std::string err;
 		if (!tinyobj::LoadObj(shapes, materials, err, std::string(MESH_PATH + name).c_str())) {
-			LogError("Failed loading obj: %s", err.c_str());
+			Log(Error, "Failed loading obj: %s", err.c_str());
 			return nullptr;
 		}
 
 		tinyobj::mesh_t shape = shapes[0].mesh;
 		if (shape.positions.empty() || shape.normals.empty() || shape.texcoords.empty()) {
-			LogError("One or more of the requried geometry properties are missing in %s", std::string(MESH_PATH + name).c_str());
+			Log(Error, "One or more of the requried geometry properties are missing in %s", std::string(MESH_PATH + name).c_str());
 			return nullptr;
 		}
 
