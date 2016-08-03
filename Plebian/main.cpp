@@ -1,7 +1,10 @@
 #include "renderer/window.h"
-#include <stdlib.h>
 
 int main(void) {
-	Window::Create();
-	exit(EXIT_SUCCESS);
+    Window window;
+    window.Init(1280, 720);
+    while (!window.ShouldClose()) {
+        window.UpdateInput();
+        window.SwapBuffers();
+    }
 }

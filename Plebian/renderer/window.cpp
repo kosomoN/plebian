@@ -1,47 +1,56 @@
-#include "renderer/window.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include "globalsystem.h"
+#include "window.h"
 #include "log.h"
 
-GlobalSystem* g_sys;
-
-static void error_callback(int error, const char* description)
-{
-	fputs(description, stderr);
+Window::~Window() {
+    glfwTerminate();
 }
 
-void Window::Create() {
+void glfw_error_callback(int error, const char* description) {
+    Log(Error, "GLFW Error: %s", description);
+}
 
-	GLFWwindow* window;
-	glfwSetErrorCallback(error_callback);
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
-	window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
-	if (!window){
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height) {
+    glViewport(0, 0, width, height);
+    Window* win = (Window*) glfwGetWindowUserPointer(glfw_window);
+    for (WinResizeListener* listener : win->resizeListeners)
+        listener->WindowResized(width, height);
+}
 
-	glfwMakeContextCurrent(window);
-	GLenum err = glewInit();
-	if (GLEW_OK != err)
-	{
-		Log(Error, NULL, "Error: %s\n", glewGetErrorString(err));
-	}
+bool Window::Init(int width, int height) {
+    glfwSetErrorCallback(glfw_error_callback);
+    if (!glfwInit()) {
+        Log(Error, "Failed to initialize GLFW.");
+        return false;
+    }
 
-	g_sys = new GlobalSystem;
-	g_sys->p_window = window;
-	g_sys->Init();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfw_win = glfwCreateWindow(width, height, "plebian", NULL, NULL);
+    if (!glfw_win) {
+        Log(Error, "Failed to create GLFW window.");
+        glfwTerminate();
+        return false;
+    }
+    glfwSetWindowUserPointer(glfw_win, this);
 
-	while (!glfwWindowShouldClose(window)) {
-		g_sys->Update();
+    glfwMakeContextCurrent(glfw_win);
+    glfwSetFramebufferSizeCallback(glfw_win, framebuffer_size_callback);
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+    glewExperimental = GL_TRUE;
+    GLenum err = glewInit();
+    if (GLEW_OK != err) {
+        Log(Error, "GLEW Error: %s", glewGetErrorString(err));
+        return false;
+    }
+    Log(Info, "Using GLEW %s", glewGetString(GLEW_VERSION));
 
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	return;
+    return true;
+}
+
+void Window::UpdateInput() {
+    glfwPollEvents();
+}
+
+void Window::SwapBuffers() {
+    glfwSwapBuffers(glfw_win);
 }
