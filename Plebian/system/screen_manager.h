@@ -1,5 +1,8 @@
 #ifndef SCREEN_MANAGER_H_
-#define SCREEN_MANAGER_H
+#define SCREEN_MANAGER_H_
+
+#include <stack>
+#include "screen.h"
 
 class ScreenManager {
 public:
@@ -10,4 +13,4 @@ private:
     std::stack<IScreen*> screens;
 };
 
-#endif // SCREEN_MANAGER_H
+#endif // SCREEN_MANAGER_H_

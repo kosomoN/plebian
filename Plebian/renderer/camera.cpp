@@ -1,9 +1,11 @@
 #include "camera.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 Camera::Camera(int cam_width, int cam_height, float cam_fov)
     : width(cam_width), height(cam_height), fov(cam_fov) {
-    resize(width, height);
-    updateMatrix();
+    Resize(width, height);
+    UpdateMatrix();
 }
 
 void Camera::UpdateMatrix() {
@@ -12,7 +14,7 @@ void Camera::UpdateMatrix() {
 
 void Camera::SetFOV(float cam_fov) {
     fov = cam_fov;
-    resize(width, height);
+    Resize(width, height);
 }
 
 void Camera::Resize(int cam_width, int cam_height) {

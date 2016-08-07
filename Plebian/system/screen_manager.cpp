@@ -1,11 +1,13 @@
-#include "screenmanager.h"
+#include "screen_manager.h"
+
+#include <assert.h>
 
 void ScreenManager::Update(double delta) {
     screens.top()->Update(delta);
 }
 
 void ScreenManager::PushScreen(IScreen* screen) {
-    ASSERT(screen != nullptr);
+    assert(screen != nullptr);
 
     if (!screens.empty())
         screens.top()->Hide();
@@ -16,7 +18,7 @@ void ScreenManager::PushScreen(IScreen* screen) {
 }
 
 void ScreenManager::PopScreen() {
-    ASSERT(screens.size() > 1);
+    assert(screens.size() > 1);
 
     IScreen* screen = screens.top();
     screen->Hide();

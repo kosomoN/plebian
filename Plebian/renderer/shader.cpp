@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "shader.h"
 
 #include <iostream>
 #include <fstream>
@@ -29,7 +29,7 @@ bool Shader::Init(std::string name) {
 			if (shader_type != 0) {
 				GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
 				if (loaded_shader == 0) {
-					for each (GLuint shader in shaders) {
+					for (GLuint shader : shaders) {
 						glDetachShader(m_shader_program, shader);
 						glDeleteShader(shader);
 					}
@@ -59,7 +59,7 @@ bool Shader::Init(std::string name) {
 	if (shader_type != 0) {
 		GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
 		if (loaded_shader == 0) {
-			for each (GLuint shader in shaders) {
+			for (GLuint shader : shaders) {
 				glDetachShader(m_shader_program, shader);
 				glDeleteShader(shader);
 			}
@@ -88,7 +88,7 @@ bool Shader::Init(std::string name) {
 		std::vector<char> log(log_length);
 		glGetProgramInfoLog(m_shader_program, log_length, &log_length, &log[0]);
 		Log(Error, "Error linking shader: %s\n%s", (SHADER_PATH + name).c_str(), log.data());
-		for each (GLuint shader in shaders) {
+		for (GLuint shader : shaders) {
 			glDetachShader(m_shader_program, shader);
 			glDeleteShader(shader);
 		}
@@ -98,7 +98,7 @@ bool Shader::Init(std::string name) {
 		return false;
 	}
 
-	for each (GLuint shader in shaders) {
+	for (GLuint shader : shaders) {
 		glDetachShader(m_shader_program, shader);
 		glDeleteShader(shader);
 	}
@@ -107,7 +107,7 @@ bool Shader::Init(std::string name) {
 	return true;
 }
 
-GLuint Shader::LoadShader(std::string& content, GLenum shader_type) {
+GLuint Shader::LoadShader(std::string content, GLenum shader_type) {
 	GLuint shader_id = glCreateShader(shader_type);
 	const char* p_content = content.c_str();
 	glShaderSource(shader_id, 1, &p_content, NULL);

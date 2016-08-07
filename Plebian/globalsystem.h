@@ -9,8 +9,8 @@
 #include <GLFW/glfw3.h>
 
 struct GlobalSystem {
-	GlobalSystem::GlobalSystem() {};
-	GlobalSystem::~GlobalSystem() {};
+	GlobalSystem() {};
+	~GlobalSystem() {};
 
 	GLFWwindow* p_window;
 

@@ -2,6 +2,7 @@
 #define ISCREEN_H_
 
 class IScreen {
+public:
     virtual ~IScreen() = 0;
     virtual void Enter() = 0;
     virtual void Exit() = 0;

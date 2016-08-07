@@ -12,7 +12,7 @@ public:
 
     void UpdateMatrix();
     void SetFOV(float fov);
-    void Sesize(int width, int height);
+    void Resize(int width, int height);
     glm::vec3 GetWorldPosition();
     glm::mat4& GetCombined() { return combined; }
 
@@ -20,8 +20,8 @@ private:
     glm::mat4 projectionMatrix;
     glm::mat4 combined;
 
-    const static float near = 0.1f;
-    const static float far  = 100.0f;
+    constexpr static float near = 0.1f;
+    constexpr static float far  = 100.0f;
 
     int width, height;
     float fov;

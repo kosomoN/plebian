@@ -1,4 +1,4 @@
-#include "renderer/meshloader.h"
+#include "io/meshloader.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tinyobj/tiny_obj_loader.h>

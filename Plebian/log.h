@@ -1,7 +1,6 @@
 #ifndef LOG_H_
 #define LOG_H_
 
-
 enum LogLevel {
     Info = 1, Warn, Error
 };
