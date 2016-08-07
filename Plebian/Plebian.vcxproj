@@ -150,10 +150,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="globalsystem.cpp" />
+    <ClCompile Include="io\meshloader.cpp" />
     <ClCompile Include="io\textureloader.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="renderer\meshloader.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
