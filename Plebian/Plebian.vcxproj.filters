@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -21,6 +21,9 @@
     </Filter>
     <Filter Include="Source Files\io">
       <UniqueIdentifier>{213f799f-23d9-4d94-ac77-3da4b34a5e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{103d7535-634a-4c12-83a9-61c2cc0d43db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +56,8 @@
     </ClCompile>
     <ClCompile Include="renderer\mesh_renderer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    <ClCompile Include="input\input.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +99,11 @@
     </ClInclude>
     <ClInclude Include="renderer\mesh_renderer.h">
       <Filter>Source Files\Rendering</Filter>
+    <ClInclude Include="input\input.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\inputlistener.h">
+      <Filter>Source Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

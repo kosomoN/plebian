@@ -1,4 +1,5 @@
 #include "renderer/window.h"
+#include "input/input.h"
 
 #include <entityx/Entity.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,6 +14,10 @@
 int main(void) {
     Window window;
     window.Init(1280, 720);
+
+    window.SetInput(new Input);
+    window.GetInput()->Init(window.GetWindow());
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
@@ -40,6 +45,7 @@ int main(void) {
     window.resizeListeners.push_back(&camera);
 
     double time;
+
     while (!window.ShouldClose()) {
         time = glfwGetTime();
         window.UpdateInput();
@@ -51,4 +57,6 @@ int main(void) {
         mesh_renderer.Render(0.0f, camera);
         window.SwapBuffers();
     }
+
+    window.GetInput()->ClearListeners();
 }
