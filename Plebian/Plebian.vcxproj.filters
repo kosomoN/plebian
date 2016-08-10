@@ -51,6 +51,9 @@
     <ClCompile Include="system\screen_manager.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\mesh_renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="components.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\mesh_renderer.h">
+      <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
