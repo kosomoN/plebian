@@ -45,6 +45,12 @@
     <ClCompile Include="io\meshloader.cpp">
       <Filter>Source Files\io</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\camera.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="system\screen_manager.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -59,28 +65,28 @@
     <ClInclude Include="renderer\mesh.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\meshloader.h">
-      <Filter>Source Files\io</Filter>
-    </ClInclude>
     <ClInclude Include="io\textureloader.h">
       <Filter>Source Files\io</Filter>
     </ClInclude>
     <ClInclude Include="renderer\texture.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="system\scene_interface.h">
-      <Filter>Source Files\System</Filter>
+    <ClInclude Include="log.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\camera_interface.h">
+    <ClInclude Include="io\meshloader.h">
+      <Filter>Source Files\io</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\camera.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="log.h">
+    <ClInclude Include="system\screen.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="system\screen_manager.h">
+      <Filter>Source Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="components.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

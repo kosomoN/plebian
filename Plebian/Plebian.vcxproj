@@ -154,22 +154,24 @@
     <ClCompile Include="io\textureloader.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\window.cpp" />
+    <ClCompile Include="system\screen_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components.h" />
+    <ClInclude Include="components.h" />
     <ClInclude Include="globalsystem.h" />
+    <ClInclude Include="io\meshloader.h" />
     <ClInclude Include="io\textureloader.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="renderer\camera_interface.h" />
+    <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\mesh.h" />
-    <ClInclude Include="renderer\meshloader.h" />
     <ClInclude Include="renderer\texture.h" />
     <ClInclude Include="renderer\window.h" />
     <ClInclude Include="renderer\shader.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="system\scene_interface.h" />
+    <ClInclude Include="system\screen.h" />
+    <ClInclude Include="system\screen_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
