@@ -26,3 +26,8 @@ void Camera::Resize(int cam_width, int cam_height) {
 glm::vec3 Camera::GetWorldPosition() {
     return glm::vec3(viewMatrix[3]);
 }
+
+void Camera::WindowResized(int width, int height)
+{
+	Resize(width, height);
+}

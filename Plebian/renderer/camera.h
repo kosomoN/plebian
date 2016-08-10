@@ -3,8 +3,9 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
+#include "renderer/window.h"
 
-class Camera {
+class Camera : public WinResizeListener {
 public:
     Camera(int cam_width, int cam_height, float cam_fov);
 
@@ -15,6 +16,8 @@ public:
     void Resize(int width, int height);
     glm::vec3 GetWorldPosition();
     glm::mat4& GetCombined() { return combined; }
+
+	virtual void WindowResized(int width, int height);
 
 private:
     glm::mat4 projectionMatrix;
