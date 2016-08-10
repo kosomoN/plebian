@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="globalsystem.cpp" />
+    <ClCompile Include="input\dummyinput.cpp" />
     <ClCompile Include="input\input.cpp" />
     <ClCompile Include="io\meshloader.cpp" />
     <ClCompile Include="io\textureloader.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="components.h" />
     <ClInclude Include="globalsystem.h" />
+    <ClInclude Include="input\dummyinput.h" />
     <ClInclude Include="input\input.h" />
     <ClInclude Include="input\inputlistener.h" />
     <ClInclude Include="io\meshloader.h" />

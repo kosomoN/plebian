@@ -56,6 +56,7 @@
     </ClCompile>
     <ClCompile Include="renderer\mesh_renderer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="input\input.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
@@ -99,6 +100,7 @@
     </ClInclude>
     <ClInclude Include="renderer\mesh_renderer.h">
       <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="input\input.h">
       <Filter>Source Files\Input</Filter>
     </ClInclude>
