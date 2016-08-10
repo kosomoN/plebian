@@ -3,10 +3,11 @@
 
 #include <entityx/entityx.h>
 #include "components.h"
+#include "renderer/camera.h"
 
 class MeshRenderer {
 public:
-    void Render(float delta);
+    void Render(float delta, Camera& camera);
     void RegisterEntity(entityx::Entity entity);
     void UnregisterEntity(entityx::Entity entity);
 private:

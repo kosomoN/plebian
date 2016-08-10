@@ -27,7 +27,7 @@ Texture* TextureLoader::GetTexture(std::string fn) {
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &p_tex->texture_id);
 	glBindTexture(GL_TEXTURE_2D, p_tex->texture_id);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);

@@ -2,13 +2,15 @@
 
 #include <algorithm>
 #include <GL/glew.h>
-#include "components.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-void MeshRenderer::Render(float delta) {
+void MeshRenderer::Render(float delta, Camera& cam) {
     for (entityx::Entity e : entities) {
-        auto transform = e.component<Transform>();
-        auto meshComponent = e.component<MeshComponent>();
-        Mesh* mesh = meshComponent.get()->mesh;
+        Transform* transform = e.component<Transform>().get();
+        MeshComponent* meshComponent = e.component<MeshComponent>().get();
+        Mesh* mesh = meshComponent->mesh;
 
         if (current_shader != meshComponent->shader->m_shader_program) {
             current_shader = meshComponent->shader->m_shader_program;
@@ -22,6 +24,11 @@ void MeshRenderer::Render(float delta) {
             current_tex = meshComponent->texture->texture_id;
             glBindTexture(GL_TEXTURE_2D, current_tex);
         }
+
+        glm::mat4 worldMat =  glm::translate(glm::mat4(), transform->pos) * glm::mat4_cast(transform->orientation);
+        glm::mat4 mvp = cam.GetCombined() * worldMat;
+        glUniformMatrix4fv(glGetUniformLocation(current_shader, "MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
+        glUniformMatrix4fv(glGetUniformLocation(current_shader, "worldMat"), 1, GL_FALSE, glm::value_ptr(worldMat));
 
         glBindVertexArray(mesh->vertex_array_object);
         glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, 0);
