@@ -24,7 +24,7 @@ void Camera::Resize(int cam_width, int cam_height) {
 }
 
 glm::vec3 Camera::GetWorldPosition() {
-    return glm::vec3(viewMatrix[3]);
+    return glm::vec3(glm::inverse(viewMatrix)[3]);
 }
 
 void Camera::WindowResized(int width, int height)
