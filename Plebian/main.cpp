@@ -32,7 +32,7 @@ int main(void) {
     entityx::EntityManager entities(events);
     entityx::Entity ent = entities.create();
     Transform* transform = ent.assign<Transform>().get();
-    transform->pos.x += 2;
+    transform->pos.x += 0;
     ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), &shader, texture_loader.GetTexture("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
@@ -49,7 +49,8 @@ int main(void) {
     while (!window.ShouldClose()) {
         time = glfwGetTime();
         window.UpdateInput();
-        camera.viewMatrix = glm::lookAt(glm::vec3(cos(time) * 5, cos(time * 0.3) * 3, sin(time) * 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		camera.position = glm::vec3(sin(time), 0, cos(time)) * 5.f;
+		camera.rotation = glm::rotate(glm::quat(), (float)-time, glm::vec3(0, 1, 0));
         camera.UpdateMatrix();
         transform->orientation = glm::rotate(glm::quat(), (float) time, glm::vec3(0, 1, 1));
 

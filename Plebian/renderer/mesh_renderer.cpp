@@ -26,10 +26,11 @@ void MeshRenderer::Render(float delta, Camera& cam) {
         }
 
         glm::mat4 worldMat =  glm::translate(glm::mat4(), transform->pos) * glm::mat4_cast(transform->orientation);
-        glm::mat4 mvp = cam.GetCombined() * worldMat;
+        glm::mat4 mvp = cam.combined * worldMat;
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "worldMat"), 1, GL_FALSE, glm::value_ptr(worldMat));
-		glUniform3f(glGetUniformLocation(current_shader, "camPos"), cam.GetWorldPosition().x, cam.GetWorldPosition().y, cam.GetWorldPosition().z);
+		//cam.viewMatrix = glm::translate(glm::mat4(), glm::vec3(1, 2, 3));
+		glUniform3fv(glGetUniformLocation(current_shader, "camPos"), 1, glm::value_ptr(cam.position));
 
         glBindVertexArray(mesh->vertex_array_object);
         glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, 0);

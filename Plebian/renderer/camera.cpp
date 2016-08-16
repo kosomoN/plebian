@@ -9,7 +9,7 @@ Camera::Camera(int cam_width, int cam_height, float cam_fov)
 }
 
 void Camera::UpdateMatrix() {
-    combined = projectionMatrix * viewMatrix;
+	combined = projectionMatrix * glm::mat4_cast(rotation) * glm::translate(glm::mat4(), -position);
 }
 
 void Camera::SetFOV(float cam_fov) {
@@ -21,10 +21,6 @@ void Camera::Resize(int cam_width, int cam_height) {
     width = cam_width;
     height = cam_height;
     projectionMatrix = glm::perspective(glm::radians(fov), ((float) width) / height, near, far);
-}
-
-glm::vec3 Camera::GetWorldPosition() {
-    return glm::vec3(glm::inverse(viewMatrix)[3]);
 }
 
 void Camera::WindowResized(int width, int height)

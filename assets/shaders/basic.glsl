@@ -77,6 +77,6 @@ void main() {
     }
 
     vec4 diffuse = lightColor * clamp(NdotL, 0.1f, 1);
-    frag_color = texture(diffuseTex, uv) + (specular * diffuse);
+    frag_color = texture(diffuseTex, uv) * (specular * diffuse);
     frag_color.rgb = pow(frag_color.rgb, vec3(1.0/2.2));
 }
