@@ -22,8 +22,11 @@
     <Filter Include="Source Files\io">
       <UniqueIdentifier>{213f799f-23d9-4d94-ac77-3da4b34a5e59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Input">
-      <UniqueIdentifier>{103d7535-634a-4c12-83a9-61c2cc0d43db}</UniqueIdentifier>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{c26cb608-926d-4a80-8539-376c21f7c543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dev_gui">
+      <UniqueIdentifier>{fb60d68b-a1bd-4fa7-bfcc-17ff90d331c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +61,22 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="input\input.cpp">
-      <Filter>Source Files\Input</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\imgui\imgui_demo.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\inc\imgui\imgui_impl_glfw_gl3.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="entity_gui.cpp">
+      <Filter>Source Files\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,13 +120,34 @@
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="input\input.h">
-      <Filter>Source Files\Input</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="input\inputlistener.h">
-      <Filter>Source Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="input\dummyinput.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\imconfig.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\imgui.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\imgui_impl_glfw_gl3.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\imgui_internal.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\stb_rect_pack.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\stb_textedit.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\imgui\stb_truetype.h">
+      <Filter>Source Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_gui.h">
+      <Filter>Source Files\imgui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
