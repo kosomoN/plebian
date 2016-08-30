@@ -164,6 +164,7 @@
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\mesh_renderer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
+    <ClCompile Include="renderer\shadow_map.cpp" />
     <ClCompile Include="renderer\window.cpp" />
     <ClCompile Include="system\screen_manager.cpp" />
   </ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\mesh.h" />
     <ClInclude Include="renderer\mesh_renderer.h" />
+    <ClInclude Include="renderer\shadow_map.h" />
     <ClInclude Include="renderer\texture.h" />
     <ClInclude Include="renderer\window.h" />
     <ClInclude Include="renderer\shader.h" />

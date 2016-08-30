@@ -83,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="input\fp_camera_controller.cpp">
       <Filter>Source Files\input</Filter>
+	</ClCompile>
+    <ClCompile Include="renderer\shadow_map.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="input\fp_camera_controller.h">
       <Filter>Source Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shadow_map.h">
+      <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

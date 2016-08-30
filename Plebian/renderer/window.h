@@ -24,6 +24,8 @@ public:
     bool ShouldClose() { return glfwWindowShouldClose(glfw_win) != 0; }
     GLFWwindow* GetWindow() { return glfw_win; }
     Input* GetInput() { return input; }
+
+    int width, height;
 private:
     GLFWwindow* glfw_win;
     Input* input;

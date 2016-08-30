@@ -20,7 +20,10 @@ void Camera::SetFOV(float cam_fov) {
 void Camera::Resize(int cam_width, int cam_height) {
     width = cam_width;
     height = cam_height;
-    projectionMatrix = glm::perspective(glm::radians(fov), ((float) width) / height, near, far);
+    if (width == 16)
+        projectionMatrix = glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, -10.f, 10.f);
+    else
+        projectionMatrix = glm::perspective(glm::radians(fov), ((float) width) / height, near, far);
 }
 
 void Camera::WindowResized(int width, int height)

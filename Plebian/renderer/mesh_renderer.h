@@ -7,7 +7,7 @@
 
 class MeshRenderer {
 public:
-    void Render(float delta, Camera& camera);
+    void Render(float delta, Camera& camera, Camera& light_camera, GLuint shader = 0);
     void RegisterEntity(entityx::Entity entity);
     void UnregisterEntity(entityx::Entity entity);
 private:

@@ -12,11 +12,15 @@ void glfw_error_callback(int error, const char* description) {
 void framebuffer_size_callback(GLFWwindow* glfw_window, int width, int height) {
     glViewport(0, 0, width, height);
     Window* win = (Window*) glfwGetWindowUserPointer(glfw_window);
+    win->width = width;
+    win->height = height;
     for (WinResizeListener* listener : win->resizeListeners)
         listener->WindowResized(width, height);
 }
 
-bool Window::Init(int width, int height) {
+bool Window::Init(int width_, int height_) {
+    width = width_;
+    height = height_;
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()) {
         Log(Error, "Failed to initialize GLFW.");
