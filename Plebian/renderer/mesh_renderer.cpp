@@ -12,6 +12,8 @@ void MeshRenderer::Render(float delta, Camera& cam) {
         MeshComponent* meshComponent = e.component<MeshComponent>().get();
         Mesh* mesh = meshComponent->mesh;
 
+        if (!mesh) continue;
+
         if (current_shader != meshComponent->shader->m_shader_program) {
             current_shader = meshComponent->shader->m_shader_program;
             glUseProgram(current_shader);
