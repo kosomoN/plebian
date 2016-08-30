@@ -1,11 +1,12 @@
 #include "renderer/window.h"
-#include "input/input.h"
 
 #include <entityx/Entity.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
+#include "input/input.h"
+#include "input/fp_camera_controller.h"
 #include "components.h"
 #include "io/meshloader.h"
 #include "io/textureloader.h"
@@ -50,23 +51,30 @@ int main(void) {
 
     ImGui_ImplGlfwGL3_Init(window.GetWindow(), true);
 
-    double time;
     ImGuiListener guiListener;
     window.GetInput()->AddListener(&guiListener);
+    FPCameraController camController(&camera);
+    window.GetInput()->AddListener(&camController);
+
+    double time = glfwGetTime();
+    float delta;
 
     bool show_entity_editor = true;
     while (!window.ShouldClose()) {
+        delta = (float) (glfwGetTime() - time);
         time = glfwGetTime();
+
         window.UpdateInput();
         ImGui_ImplGlfwGL3_NewFrame();
 
         ShowEntityEditor(&show_entity_editor, &camera, &entities);
 
+        camController.Update(delta);
         camera.UpdateMatrix();
         transform->orientation = glm::rotate(glm::quat(), (float)time, glm::vec3(0, 1, 1));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        mesh_renderer.Render(0.0f, camera);
+        mesh_renderer.Render(delta, camera);
         ImGui::Render();
         window.SwapBuffers();
     }
