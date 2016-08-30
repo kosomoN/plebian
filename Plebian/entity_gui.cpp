@@ -49,7 +49,7 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
                 ImGui::Selectable("Rotation");
                 ImGui::NextColumn();
                 ImGui::PushItemWidth(-1);
-                ImGui::DragQuat("##value", &camera->rotation);
+                ImGui::DragQuat("##value", &camera->orientation);
                 ImGui::PopItemWidth();
                 ImGui::NextColumn();
                 ImGui::PopID();
@@ -60,7 +60,7 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
                 ImGui::Selectable("Rotation Quat");
                 ImGui::NextColumn();
                 ImGui::PushItemWidth(-1);
-                ImGui::DragFloat4("##value", &camera->rotation[0], 0.01f);
+                ImGui::DragFloat4("##value", &camera->orientation[0], 0.01f);
                 ImGui::PopItemWidth();
                 ImGui::NextColumn();
                 ImGui::PopID();

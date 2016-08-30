@@ -3,14 +3,14 @@
 
 class IInputListener {
 public:
-    virtual bool KeyUp(int key) = 0;
-    virtual bool KeyDown(int key) = 0;
-    virtual bool KeyRepeat(int key) = 0;
-    virtual bool MouseMoved(double xpos, double ypos) = 0;
-    virtual bool MouseUp(int button) = 0;
-    virtual bool MouseDown(int button) = 0;
-    virtual bool MouseEnter() = 0;
-    virtual bool MouseLeave() = 0;
+    virtual bool KeyUp(int key) { return false; }
+    virtual bool KeyDown(int key) { return false; }
+    virtual bool KeyRepeat(int key) { return false; }
+    virtual bool MouseMoved(double xpos, double ypos) { return false; }
+    virtual bool MouseUp(int button) { return false; }
+    virtual bool MouseDown(int button) { return false; }
+    virtual bool MouseEnter() { return false; }
+    virtual bool MouseLeave() { return false; }
 };
 
 #endif //IINPUTLISTENER_H_

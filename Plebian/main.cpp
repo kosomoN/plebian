@@ -45,18 +45,19 @@ int main(void) {
     mesh_renderer.RegisterEntity(ent);
 
     Camera camera(1280, 720, 60);
+    camera.position = glm::vec3(0.f, 0.f, 5.f);
     window.resizeListeners.push_back(&camera);
 
     ImGui_ImplGlfwGL3_Init(window.GetWindow(), true);
 
     double time;
+    ImGuiListener guiListener;
+    window.GetInput()->AddListener(&guiListener);
 
     bool show_entity_editor = true;
     while (!window.ShouldClose()) {
         time = glfwGetTime();
         window.UpdateInput();
-        camera.position = glm::vec3(sin(time), 0, cos(time)) * 5.f;
-        camera.rotation = glm::rotate(glm::quat(), (float)-time, glm::vec3(0, 1, 0));
         ImGui_ImplGlfwGL3_NewFrame();
 
         ShowEntityEditor(&show_entity_editor, &camera, &entities);

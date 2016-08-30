@@ -6,6 +6,8 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
+#include "input/inputlistener.h"
+
 struct GLFWwindow;
 
 IMGUI_API bool        ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks);
@@ -23,3 +25,11 @@ IMGUI_API void        ImGui_ImplGlfwGL3_MouseButtonCallback(GLFWwindow* window, 
 IMGUI_API void        ImGui_ImplGlfwGL3_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 IMGUI_API void        ImGui_ImplGlfwGL3_KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 IMGUI_API void        ImGui_ImplGlfwGL3_CharCallback(GLFWwindow* window, unsigned int c);
+
+class ImGuiListener : public IInputListener {
+    virtual bool KeyUp(int key);
+    virtual bool KeyDown(int key);
+    virtual bool KeyRepeat(int key);
+    virtual bool MouseUp(int button);
+    virtual bool MouseDown(int button);
+};

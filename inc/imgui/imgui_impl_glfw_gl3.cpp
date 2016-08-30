@@ -332,9 +332,7 @@ bool    ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks)
 
     if (install_callbacks)
     {
-        glfwSetMouseButtonCallback(window, ImGui_ImplGlfwGL3_MouseButtonCallback);
         glfwSetScrollCallback(window, ImGui_ImplGlfwGL3_ScrollCallback);
-        glfwSetKeyCallback(window, ImGui_ImplGlfwGL3_KeyCallback);
         glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
     }
 
@@ -394,4 +392,29 @@ void ImGui_ImplGlfwGL3_NewFrame()
 
     // Start the frame
     ImGui::NewFrame();
+}
+
+bool ImGuiListener::KeyUp(int key) {
+    ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_RELEASE, 0);
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+bool ImGuiListener::KeyDown(int key) {
+    ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_PRESS, 0);
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+bool ImGuiListener::KeyRepeat(int key) {
+    ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_REPEAT, 0);
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+bool ImGuiListener::MouseUp(int button) {
+    ImGui_ImplGlfwGL3_MouseButtonCallback(nullptr, button, GLFW_RELEASE, 0);
+    return ImGui::GetIO().WantCaptureMouse;
+}
+
+bool ImGuiListener::MouseDown(int button) {
+    ImGui_ImplGlfwGL3_MouseButtonCallback(nullptr, button, GLFW_PRESS, 0);
+    return ImGui::GetIO().WantCaptureMouse;
 }

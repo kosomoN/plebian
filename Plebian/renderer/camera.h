@@ -10,7 +10,7 @@ class Camera : public WinResizeListener {
 public:
     Camera(int cam_width, int cam_height, float cam_fov);
 
-	glm::quat rotation;
+	glm::quat orientation;
 	glm::vec3 position;
 	glm::mat4 combined;
     void UpdateMatrix();

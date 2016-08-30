@@ -9,7 +9,7 @@ Camera::Camera(int cam_width, int cam_height, float cam_fov)
 }
 
 void Camera::UpdateMatrix() {
-	combined = projectionMatrix * glm::mat4_cast(rotation) * glm::translate(glm::mat4(), -position);
+	combined = projectionMatrix * glm::mat4_cast(orientation) * glm::translate(glm::mat4(), -position);
 }
 
 void Camera::SetFOV(float cam_fov) {
