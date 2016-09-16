@@ -44,7 +44,7 @@ void MeshRenderer::Render(float delta, Camera& cam, Camera& light_camera, GLuint
             glBindTexture(GL_TEXTURE_2D, current_tex);
         }
 
-        glm::mat4 worldMat =  glm::translate(glm::mat4(), transform->pos) * glm::mat4_cast(transform->orientation);
+        glm::mat4 worldMat = transform->WorldSpace();
         glm::mat4 mvp = cam.combined * worldMat;
         glm::mat4 lightMVP = biasMatrix * light_camera.combined * worldMat;
 

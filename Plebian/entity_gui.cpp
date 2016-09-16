@@ -70,6 +70,57 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
             ImGui::PopID();
         }
 
+        static void ShowTranform(Transform* transform, int& imgui_id)
+        {
+            ImGui::PushID(imgui_id++);
+            ImGui::AlignFirstTextHeightToWidgets();
+            ImGui::Bullet();
+            ImGui::Selectable("Position");
+            ImGui::NextColumn();
+            ImGui::PushItemWidth(-1);
+            ImGui::DragFloat3("##value", &transform->pos[0], 0.01f);
+            ImGui::PopItemWidth();
+            ImGui::NextColumn();
+            ImGui::PopID();
+
+            ImGui::PushID(imgui_id++);
+            ImGui::AlignFirstTextHeightToWidgets();
+            ImGui::Bullet();
+            ImGui::Selectable("Rotation");
+            ImGui::NextColumn();
+            ImGui::PushItemWidth(-1);
+            ImGui::DragQuat("##value", &transform->orientation);
+            ImGui::PopItemWidth();
+            ImGui::NextColumn();
+            ImGui::PopID();
+
+            ImGui::PushID(imgui_id++);
+            ImGui::AlignFirstTextHeightToWidgets();
+            ImGui::Bullet();
+            ImGui::Selectable("Rotation Quat");
+            ImGui::NextColumn();
+            ImGui::PushItemWidth(-1);
+            ImGui::DragFloat4("##value", &transform->orientation[0], 0.01f);
+            ImGui::PopItemWidth();
+            ImGui::NextColumn();
+            ImGui::PopID();
+
+            if (transform->parent) {
+                ImGui::PushID(imgui_id++);
+                ImGui::AlignFirstTextHeightToWidgets();
+                bool node_open = ImGui::TreeNode("Parent", "Parent");
+                ImGui::NextColumn();
+                ImGui::AlignFirstTextHeightToWidgets();
+                ImGui::NextColumn();
+
+                if (node_open) {
+                    ShowTranform(transform->parent, imgui_id);
+                    ImGui::TreePop();
+                }
+                ImGui::PopID();
+            }
+        }
+
         static void ShowEntity(entityx::Entity& ent)
         {
             ImGui::PushID(ent.id().id());                      // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
@@ -83,38 +134,7 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
                 int i = 0;
                 auto transform_handle = ent.component<Transform>();
                 if (transform_handle) {
-                    ImGui::PushID(i++);
-                    ImGui::AlignFirstTextHeightToWidgets();
-                    ImGui::Bullet();
-                    ImGui::Selectable("Position");
-                    ImGui::NextColumn();
-                    ImGui::PushItemWidth(-1);
-                    ImGui::DragFloat3("##value", &transform_handle->pos[0], 0.01f);
-                    ImGui::PopItemWidth();
-                    ImGui::NextColumn();
-                    ImGui::PopID();
-                    
-                    ImGui::PushID(i++);
-                    ImGui::AlignFirstTextHeightToWidgets();
-                    ImGui::Bullet();
-                    ImGui::Selectable("Rotation");
-                    ImGui::NextColumn();
-                    ImGui::PushItemWidth(-1);
-                    ImGui::DragQuat("##value", &transform_handle->orientation);
-                    ImGui::PopItemWidth();
-                    ImGui::NextColumn();
-                    ImGui::PopID();
-
-                    ImGui::PushID(i++);
-                    ImGui::AlignFirstTextHeightToWidgets();
-                    ImGui::Bullet();
-                    ImGui::Selectable("Rotation Quat");
-                    ImGui::NextColumn();
-                    ImGui::PushItemWidth(-1);
-                    ImGui::DragFloat4("##value", &transform_handle->orientation[0], 0.01f);
-                    ImGui::PopItemWidth();
-                    ImGui::NextColumn();
-                    ImGui::PopID();
+                    ShowTranform(transform_handle.get(), i);
                 }
 
                 ImGui::TreePop();

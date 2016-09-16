@@ -44,12 +44,14 @@ int main(void) {
     mesh_renderer.RegisterEntity(ent);
 
     ent = entities.create();
-    ent.assign<Transform>();
+    Transform* transform = ent.assign<Transform>().get();
+    transform->parent = monkey_transform;
     ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), &shader, texture_loader.GetTexture("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
 
     ent = entities.create();
-    Transform* transform = ent.assign<Transform>().get();
+    transform = ent.assign<Transform>().get();
+    transform->parent = monkey_transform;
     transform->pos.y = -2.5f;
     ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), &shader, texture_loader.GetTexture("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
@@ -94,7 +96,6 @@ int main(void) {
 
         camController.Update(delta);
         camera.UpdateMatrix();
-        monkey_transform->orientation = glm::rotate(glm::quat(), (float)time, glm::vec3(0, 1, 1));
 
         shadow_map.BindDraw();
         glClear(GL_DEPTH_BUFFER_BIT);
