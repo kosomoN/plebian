@@ -57,11 +57,13 @@ int main(void) {
     mesh_renderer.RegisterEntity(ent);
 
 
-    Camera camera(1280, 720, 60);
+    Camera camera;
+    camera.InitPerspective(1280, 720, 60);
     camera.position = glm::vec3(0.f, 0.f, 5.f);
     window.resizeListeners.push_back(&camera);
 
-    Camera shadow_camera(16, 16, 90);
+    Camera shadow_camera;
+    shadow_camera.InitOrtho(16, 16, -10, 10);
     shadow_camera.orientation = glm::rotate(shadow_camera.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
     shadow_camera.UpdateMatrix();
 

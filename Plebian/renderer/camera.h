@@ -8,24 +8,26 @@
 
 class Camera : public WinResizeListener {
 public:
-    Camera(int cam_width, int cam_height, float cam_fov);
+    void InitOrtho(float cam_width, float cam_height, float near, float far);
+    void InitPerspective(float cam_width, float cam_height, float fov);
 
 	glm::quat orientation;
 	glm::vec3 position;
 	glm::mat4 combined;
     void UpdateMatrix();
     void SetFOV(float fov);
-    void Resize(int width, int height);
+    void Resize(float width, float height);
 
 	virtual void WindowResized(int width, int height);
 
 private:
+    bool perspective;
     glm::mat4 projectionMatrix;
 
-    constexpr static float near = 0.01f;
-    constexpr static float far  = 100.0f;
+    float near = 0.01f;
+    float far  = 100.0f;
 
-    int width, height;
+    float width, height;
     float fov;
 };
 
