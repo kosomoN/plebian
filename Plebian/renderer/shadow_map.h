@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHADOW_MAP_H_
+#define SHADOW_MAP_H_
 
 #include <GL/glew.h>
 
@@ -14,3 +15,4 @@ private:
     GLuint shadow_tex = 0;
 };
 
+#endif // SHADOW_MAP_H_

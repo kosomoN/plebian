@@ -94,5 +94,4 @@ void main() {
     frag_color = texture(diffuseTex, uv);
     frag_color.rgb *= (specular * diffuse) * getShadowFactor(lightSpace);
     frag_color.rgb = pow(frag_color.rgb, vec3(1.0/2.2));
-    float depth = getShadowFactor(lightSpace);
 }
