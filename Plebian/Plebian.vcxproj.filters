@@ -83,7 +83,7 @@
     </ClCompile>
     <ClCompile Include="input\fp_camera_controller.cpp">
       <Filter>Source Files\input</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="renderer\shadow_map.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
