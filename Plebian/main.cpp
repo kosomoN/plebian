@@ -48,13 +48,14 @@ int main(void) {
     Camera camera(1280, 720, 60);
     camera.position = glm::vec3(0.f, 0.f, 5.f);
     window.resizeListeners.push_back(&camera);
+    glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     ImGui_ImplGlfwGL3_Init(window.GetWindow(), true);
 
-    ImGuiListener guiListener;
-    window.GetInput()->AddListener(&guiListener);
     FPCameraController camController(&camera);
     window.GetInput()->AddListener(&camController);
+    ImGuiListener guiListener;
+    window.GetInput()->AddListener(&guiListener);
 
     double time = glfwGetTime();
     float delta;
@@ -71,7 +72,6 @@ int main(void) {
 
         camController.Update(delta);
         camera.UpdateMatrix();
-        transform->orientation = glm::rotate(glm::quat(), (float)time, glm::vec3(0, 1, 1));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         mesh_renderer.Render(delta, camera);

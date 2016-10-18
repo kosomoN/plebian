@@ -3,13 +3,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 Camera::Camera(int cam_width, int cam_height, float cam_fov)
-    : width(cam_width), height(cam_height), fov(cam_fov) {
+    : width(cam_width), height(cam_height), fov(cam_fov),
+    worldForward(0, 0, -1) {
     Resize(width, height);
     UpdateMatrix();
 }
 
 void Camera::UpdateMatrix() {
 	combined = projectionMatrix * glm::mat4_cast(orientation) * glm::translate(glm::mat4(), -position);
+    forward = glm::normalize(orientation * worldForward);
 }
 
 void Camera::SetFOV(float cam_fov) {

@@ -17,10 +17,13 @@ public:
     void SetFOV(float fov);
     void Resize(int width, int height);
 
+    glm::vec3 GetForward() { return forward; }
 	virtual void WindowResized(int width, int height);
 
 private:
     glm::mat4 projectionMatrix;
+    glm::vec3 worldForward;
+    glm::vec3 forward;
 
     constexpr static float near = 0.01f;
     constexpr static float far  = 100.0f;

@@ -330,12 +330,6 @@ bool    ImGui_ImplGlfwGL3_Init(GLFWwindow* window, bool install_callbacks)
     io.ImeWindowHandle = glfwGetWin32Window(g_Window);
 #endif
 
-    if (install_callbacks)
-    {
-        glfwSetScrollCallback(window, ImGui_ImplGlfwGL3_ScrollCallback);
-        glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
-    }
-
     return true;
 }
 
@@ -388,33 +382,52 @@ void ImGui_ImplGlfwGL3_NewFrame()
     g_MouseWheel = 0.0f;
 
     // Hide OS mouse cursor if ImGui is drawing it
-    glfwSetInputMode(g_Window, GLFW_CURSOR, io.MouseDrawCursor ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
+    //glfwSetInputMode(g_Window, GLFW_CURSOR, io.MouseDrawCursor ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 
     // Start the frame
     ImGui::NewFrame();
 }
 
-bool ImGuiListener::KeyUp(int key) {
+bool ImGuiListener::KeyUp(GLFWwindow* window, int key) {
     ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_RELEASE, 0);
     return ImGui::GetIO().WantCaptureKeyboard;
 }
 
-bool ImGuiListener::KeyDown(int key) {
+bool ImGuiListener::KeyDown(GLFWwindow* window, int key) {
     ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_PRESS, 0);
+    if (key == GLFW_KEY_ESCAPE) {
+        int mode = glfwGetInputMode(window, GLFW_CURSOR);
+        if (mode == GLFW_CURSOR_NORMAL)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        return true;
+    }
+
     return ImGui::GetIO().WantCaptureKeyboard;
 }
 
-bool ImGuiListener::KeyRepeat(int key) {
+bool ImGuiListener::KeyRepeat(GLFWwindow* window, int key) {
     ImGui_ImplGlfwGL3_KeyCallback(nullptr, key, 0, GLFW_REPEAT, 0);
     return ImGui::GetIO().WantCaptureKeyboard;
 }
 
-bool ImGuiListener::MouseUp(int button) {
+bool ImGuiListener::CharTyped(GLFWwindow* window, unsigned int codepoint) {
+    ImGui_ImplGlfwGL3_CharCallback(nullptr, codepoint);
+    return ImGui::GetIO().WantTextInput;
+}
+
+bool ImGuiListener::MouseUp(GLFWwindow* window, int button) {
     ImGui_ImplGlfwGL3_MouseButtonCallback(nullptr, button, GLFW_RELEASE, 0);
     return ImGui::GetIO().WantCaptureMouse;
 }
 
-bool ImGuiListener::MouseDown(int button) {
+bool ImGuiListener::MouseDown(GLFWwindow* window, int button) {
     ImGui_ImplGlfwGL3_MouseButtonCallback(nullptr, button, GLFW_PRESS, 0);
+    return ImGui::GetIO().WantCaptureMouse;
+}
+
+bool ImGuiListener::MouseScrolled(GLFWwindow* window, double xoffset, double yoffset) {
+    ImGui_ImplGlfwGL3_ScrollCallback(nullptr, xoffset, yoffset);
     return ImGui::GetIO().WantCaptureMouse;
 }

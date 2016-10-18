@@ -1,6 +1,8 @@
 #include "fp_camera_controller.h"
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/quaternion.hpp>
 #include "log.h"
 
 void FPCameraController::Update(float delta) {
@@ -13,7 +15,7 @@ void FPCameraController::Update(float delta) {
     if (down)      camera->position.y -= speed * delta;
 }
 
-bool FPCameraController::KeyUp(int key) {
+bool FPCameraController::KeyUp(GLFWwindow* window, int key) {
     switch (key) {
     case GLFW_KEY_W:
         forward = false;
@@ -37,7 +39,7 @@ bool FPCameraController::KeyUp(int key) {
     return false;
 }
 
-bool FPCameraController::KeyDown(int key) {
+bool FPCameraController::KeyDown(GLFWwindow* window, int key) {
     switch (key) {
     case GLFW_KEY_W:
         forward = true;
@@ -59,4 +61,25 @@ bool FPCameraController::KeyDown(int key) {
         break;
     }
     return false;
+}
+
+bool FPCameraController::MouseMoved(GLFWwindow* window, double xpos, double ypos) {
+	int mode = glfwGetInputMode(window, GLFW_CURSOR);
+    if (mode != GLFW_CURSOR_DISABLED) {
+        oldCursorMode = mode;
+        return false;
+    }
+
+	if (oldCursorMode == GLFW_CURSOR_DISABLED) {
+		pitch += (float)(xpos - oldX) * sensitivity;
+		yaw += (float)(ypos - oldY) * sensitivity;
+		yaw = glm::min(glm::max(yaw, -0.49f * glm::pi<float>()), 0.49f * glm::pi<float>());
+		camera->orientation = glm::angleAxis(yaw, glm::vec3(1.0f, 0.0f, 0.0f)) * glm::angleAxis(pitch, glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	oldX = xpos;
+	oldY = ypos;
+	oldCursorMode = mode;
+
+    return true;
 }
