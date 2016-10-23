@@ -2,7 +2,7 @@
 #define LOG_H_
 
 enum LogLevel {
-    Info = 1, Warn, Error
+    Info = 1, Debug, Warn, Error
 };
 
 void Log(LogLevel logLevel, const char* format, ...);

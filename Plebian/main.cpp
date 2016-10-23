@@ -61,6 +61,7 @@ int main(void) {
     camera.InitPerspective(1280, 720, 60);
     camera.position = glm::vec3(0.f, 0.f, 5.f);
     window.resizeListeners.push_back(&camera);
+    glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     Camera shadow_camera;
     shadow_camera.InitOrtho(16, 16, -10, 10);
@@ -78,10 +79,10 @@ int main(void) {
 
     ImGui_ImplGlfwGL3_Init(window.GetWindow(), true);
 
-    ImGuiListener guiListener;
-    window.GetInput()->AddListener(&guiListener);
     FPCameraController camController(&camera);
     window.GetInput()->AddListener(&camController);
+    ImGuiListener guiListener;
+    window.GetInput()->AddListener(&guiListener);
 
     double time = glfwGetTime();
     float delta;

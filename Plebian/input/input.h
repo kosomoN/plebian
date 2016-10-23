@@ -9,10 +9,13 @@
 class Input {
 public:
     void Init(GLFWwindow* window);
-    void HandleKeyEvent(int key, int action);
-    void HandleMouseMoveEvent(double xpos, double ypos);
-    void HandleMouseEnterEvent(int entered);
-    void HandleMouseButtonEvent(int button, int action);
+    void HandleKeyEvent(GLFWwindow* window, int key, int action);
+    void HandleCharEvent(GLFWwindow* window, unsigned int codepoint);
+    void HandleCharModsEvent(GLFWwindow* window, unsigned int codepoint, int mods);
+    void HandleMouseMoveEvent(GLFWwindow* window, double xpos, double ypos);
+    void HandleMouseEnterEvent(GLFWwindow* window, int entered);
+    void HandleMouseButtonEvent(GLFWwindow* window, int button, int action);
+    void HandleMouseScrollEvent(GLFWwindow* window, double xoffset, double yoffset);
     void AddListener(IInputListener* listener);
     void RemoveListener(IInputListener* listener);
     void ClearListeners();

@@ -21,6 +21,7 @@ void Camera::InitPerspective(float cam_width, float cam_height, float cam_fov)
 
 void Camera::UpdateMatrix() {
 	combined = projectionMatrix * glm::mat4_cast(orientation) * glm::translate(glm::mat4(), -position);
+    forward = glm::normalize(orientation * worldForward);
 }
 
 void Camera::SetFOV(float cam_fov) {

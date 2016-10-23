@@ -18,11 +18,14 @@ public:
     void SetFOV(float fov);
     void Resize(float width, float height);
 
+    glm::vec3 GetForward() { return forward; }
 	virtual void WindowResized(int width, int height);
 
 private:
     bool perspective;
     glm::mat4 projectionMatrix;
+    glm::vec3 worldForward = glm::vec3(0, 0, -1);
+    glm::vec3 forward;
 
     float near = 0.01f;
     float far  = 100.0f;
