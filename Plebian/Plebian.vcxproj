@@ -167,6 +167,7 @@
     <ClCompile Include="renderer\shadow_map.cpp" />
     <ClCompile Include="renderer\window.cpp" />
     <ClCompile Include="system\screen_manager.cpp" />
+    <ClCompile Include="transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\imgui\imconfig.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="renderer\shader.h" />
     <ClInclude Include="system\screen.h" />
     <ClInclude Include="system\screen_manager.h" />
+    <ClInclude Include="transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

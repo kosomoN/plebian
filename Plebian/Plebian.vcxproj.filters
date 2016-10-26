@@ -87,6 +87,9 @@
     <ClCompile Include="renderer\shadow_map.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="renderer\shadow_map.h">
       <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
