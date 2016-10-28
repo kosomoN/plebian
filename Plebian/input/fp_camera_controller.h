@@ -10,7 +10,7 @@ class FPCameraController : public IInputListener
 public:
     FPCameraController(Camera* cam) :
         camera(cam),
-        viewDir(0.0f, 0.0f, -1.0f),
+        view_dir(0.0f, 0.0f, -1.0f),
         speed(5.f),
         oldX(0),
         oldY(0) {}
@@ -31,7 +31,7 @@ private:
     float yaw, pitch;
     float sensitivity = 0.001f;
     int oldCursorMode;
-    glm::vec3 viewDir;
+    glm::vec3 view_dir;
 };
 
 #endif // FP_CAMERA_CONTROLLER_H_
