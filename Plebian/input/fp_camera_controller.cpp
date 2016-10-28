@@ -6,11 +6,11 @@
 #include "log.h"
 
 void FPCameraController::Update(float delta) {
-    glm::vec3 rightDir = glm::cross(view_dir, glm::vec3(0, 1, 0));
+    glm::vec3 right_dir = glm::normalize(glm::cross(view_dir, glm::vec3(0, 1, 0)));
     if (forward)   camera->position += view_dir * speed * delta;
     if (backwards) camera->position -= view_dir * speed * delta;
-    if (right)     camera->position += rightDir * speed * delta;
-    if (left)      camera->position -= rightDir * speed * delta;
+    if (right)     camera->position += right_dir * speed * delta;
+    if (left)      camera->position -= right_dir * speed * delta;
     if (up)        camera->position.y += speed * delta;
     if (down)      camera->position.y -= speed * delta;
 }
