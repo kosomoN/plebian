@@ -1,8 +1,8 @@
-#include "deferred_renderer.h"
+#include "g_buffer.h"
 
 #include "log.h"
 
-DeferredRenderer::~DeferredRenderer()
+GBuffer::~GBuffer()
 {
     for (int i = 0; i < NUM_TEXTURES; i++) {
         if (textures[i] != 0)
@@ -13,7 +13,7 @@ DeferredRenderer::~DeferredRenderer()
         glDeleteFramebuffers(1, &fbo);
 }
 
-bool DeferredRenderer::Init(int width_, int height_)
+bool GBuffer::Init(int width_, int height_)
 {
     width = width_;
     height = height_;
@@ -55,12 +55,12 @@ bool DeferredRenderer::Init(int width_, int height_)
     return true;
 }
 
-void DeferredRenderer::Draw()
+void GBuffer::Draw()
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 }
 
-void DeferredRenderer::Read()
+void GBuffer::Read()
 {
     for (unsigned int i = 0; i < NUM_TEXTURES; i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -68,7 +68,7 @@ void DeferredRenderer::Read()
     }
 }
 
-void DeferredRenderer::WindowResized(int width, int height)
+void GBuffer::WindowResized(int width, int height)
 {
     for (int i = 0; i < NUM_TEXTURES; i++) {
         if (textures[i] != 0)
