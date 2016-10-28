@@ -15,6 +15,7 @@
 #include "renderer/camera.h"
 #include "renderer/shadow_map.h"
 #include "entity_gui.h"
+#include "renderer/g_buffer.h"
 
 int main(void) {
     Window window;
@@ -26,12 +27,45 @@ int main(void) {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    GBuffer g_buffer;
+    g_buffer.Init(1280, 720);
+    window.resizeListeners.push_back(&g_buffer);
+
     MeshRenderer mesh_renderer;
     Shader shader;
     shader.Init("basic.glsl");
 
+    Shader light_shader;
+    light_shader.Init("light_pass.glsl");
+
+    glUseProgram(light_shader.m_shader_program);
+    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "position_tex"), GBuffer::tex_position);
+    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "diffuse_tex"), GBuffer::tex_diffuse);
+    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "normal_tex"), GBuffer::tex_normal);
+
     Shader shadow_pass;
     shadow_pass.Init("shadow_pass.glsl");
+
+    static const GLfloat quad_vertices[] = {
+        -1.0f, -1.0f,
+         1.0f, -1.0f,
+        -1.0f,  1.0f,
+         1.0f,  1.0f
+    };;
+
+    GLuint quad;
+    glGenVertexArrays(1, &quad);
+    glBindVertexArray(quad);
+
+    GLuint quad_buf;
+    glGenBuffers(1, &quad_buf);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_buf);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, quad_buf);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glBindVertexArray(0);
 
     MeshLoader mesh_loader;
     TextureLoader texture_loader;
@@ -100,15 +134,22 @@ int main(void) {
         camController.Update(delta);
         camera.UpdateMatrix();
 
-        shadow_map.BindDraw();
-        glClear(GL_DEPTH_BUFFER_BIT);
-        mesh_renderer.Render(delta, shadow_camera, shadow_camera, shadow_pass.m_shader_program);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
         glViewport(0, 0, window.width, window.height);
-        shadow_map.BindRead(GL_TEXTURE1);
+        g_buffer.Draw();
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         mesh_renderer.Render(delta, camera, shadow_camera);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        g_buffer.Read();
+
+        glUseProgram(light_shader.m_shader_program);
+        glUniform3fv(glGetUniformLocation(light_shader.m_shader_program, "cam_pos"), 1, glm::value_ptr(camera.position));
+        glBindVertexArray(quad);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
         ImGui::Render();
         window.SwapBuffers();
     }

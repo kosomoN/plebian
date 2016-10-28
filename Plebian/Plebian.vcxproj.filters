@@ -90,6 +90,9 @@
     <ClCompile Include="transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\g_buffer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="transform.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\g_buffer.h">
+      <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -50,8 +50,6 @@ void MeshRenderer::Render(float delta, Camera& cam, Camera& light_camera, GLuint
 
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "worldMat"), 1, GL_FALSE, glm::value_ptr(worldMat));
-        glUniformMatrix4fv(glGetUniformLocation(current_shader, "lightMVP"), 1, GL_FALSE, glm::value_ptr(lightMVP));
-		glUniform3fv(glGetUniformLocation(current_shader, "camPos"), 1, glm::value_ptr(cam.position));
 
         glBindVertexArray(mesh->vertex_array_object);
         glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, 0);
