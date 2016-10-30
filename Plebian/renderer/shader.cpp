@@ -18,7 +18,7 @@ bool Shader::Init(std::string name) {
 		return false;
 	}
 
-	m_shader_program = glCreateProgram();
+	shader_program = glCreateProgram();
 
 	std::vector<GLuint> shaders;
 	std::stringstream shader_data;
@@ -30,11 +30,11 @@ bool Shader::Init(std::string name) {
 				GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
 				if (loaded_shader == 0) {
 					for (GLuint shader : shaders) {
-						glDetachShader(m_shader_program, shader);
+						glDetachShader(shader_program, shader);
 						glDeleteShader(shader);
 					}
-					glDeleteProgram(m_shader_program);
-					m_shader_program = 0;
+					glDeleteProgram(shader_program);
+					shader_program = 0;
 					file.close();
 					return false;
 				}
@@ -60,11 +60,11 @@ bool Shader::Init(std::string name) {
 		GLuint loaded_shader = LoadShader(shader_data.str(), shader_type);
 		if (loaded_shader == 0) {
 			for (GLuint shader : shaders) {
-				glDetachShader(m_shader_program, shader);
+				glDetachShader(shader_program, shader);
 				glDeleteShader(shader);
 			}
-			glDeleteProgram(m_shader_program);
-			m_shader_program = 0;
+			glDeleteProgram(shader_program);
+			shader_program = 0;
 			file.close();
 			return false;
 		}
@@ -73,33 +73,33 @@ bool Shader::Init(std::string name) {
 
 	if (shaders.empty()) {
 		Log(Error, "No shaders loaded from %s", (SHADER_PATH + name).c_str());
-		glDeleteProgram(m_shader_program);
-		m_shader_program = 0;
+		glDeleteProgram(shader_program);
+		shader_program = 0;
 		file.close();
 		return false;
 	}
 
 	GLint status;
-	glLinkProgram(m_shader_program);
-	glGetProgramiv(m_shader_program, GL_LINK_STATUS, &status);
+	glLinkProgram(shader_program);
+	glGetProgramiv(shader_program, GL_LINK_STATUS, &status);
 	if (!status) {
 		GLint log_length;
-		glGetProgramiv(m_shader_program, GL_INFO_LOG_LENGTH, &log_length);
+		glGetProgramiv(shader_program, GL_INFO_LOG_LENGTH, &log_length);
 		std::vector<char> log(log_length);
-		glGetProgramInfoLog(m_shader_program, log_length, &log_length, &log[0]);
+		glGetProgramInfoLog(shader_program, log_length, &log_length, &log[0]);
 		Log(Error, "Error linking shader: %s\n%s", (SHADER_PATH + name).c_str(), log.data());
 		for (GLuint shader : shaders) {
-			glDetachShader(m_shader_program, shader);
+			glDetachShader(shader_program, shader);
 			glDeleteShader(shader);
 		}
-		glDeleteProgram(m_shader_program);
-		m_shader_program = 0;
+		glDeleteProgram(shader_program);
+		shader_program = 0;
 		file.close();
 		return false;
 	}
 
 	for (GLuint shader : shaders) {
-		glDetachShader(m_shader_program, shader);
+		glDetachShader(shader_program, shader);
 		glDeleteShader(shader);
 	}
 	file.close();
@@ -124,7 +124,7 @@ GLuint Shader::LoadShader(std::string content, GLenum shader_type) {
 		return 0;
 	}
 
-	glAttachShader(m_shader_program, shader_id);
+	glAttachShader(shader_program, shader_id);
 	return shader_id;
 }
 

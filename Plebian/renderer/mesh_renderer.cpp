@@ -31,8 +31,8 @@ void MeshRenderer::Render(float delta, Camera& cam, Camera& light_camera, GLuint
 
         if (!mesh) continue;
 
-        if (!shader_override && current_shader != meshComponent->shader->m_shader_program) {
-            current_shader = meshComponent->shader->m_shader_program;
+        if (!shader_override && current_shader != meshComponent->shader->shader_program) {
+            current_shader = meshComponent->shader->shader_program;
             glUseProgram(current_shader);
         }
 

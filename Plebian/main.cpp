@@ -16,11 +16,15 @@
 #include "renderer/shadow_map.h"
 #include "entity_gui.h"
 #include "renderer/g_buffer.h"
+#include "renderer/light_system.h"
+#include "log.h"
 
 int main(void) {
     Window window;
-    window.Init(1280, 720);
-
+    if (!window.Init(1280, 720)) {
+        Log(Error, "Failed to initialize window");
+        exit(1);
+    }
     window.SetInput(new Input);
     window.GetInput()->Init(window.GetWindow());
 
@@ -28,46 +32,32 @@ int main(void) {
     glDepthFunc(GL_LESS);
 
     GBuffer g_buffer;
-    g_buffer.Init(1280, 720);
+    if (!g_buffer.Init(1280, 720)) {
+        Log(Error, "Failed to initialize geometry buffer");
+        exit(1);
+    }
     window.resizeListeners.push_back(&g_buffer);
+
+    MeshLoader mesh_loader;
+
+    LightSystem light_system;
+    if (!light_system.Init(mesh_loader, window.width, window.height)) {
+        Log(Error, "Failed to initialize light system");
+        exit(1);
+    }
+    window.resizeListeners.push_back(&light_system);
+
+    PointLight* point_light = light_system.CreatePointLight();
+    point_light->intensity = glm::vec3(10.0f, 10.0f, 10.f);
+    point_light->SetAttenuation(glm::vec3(0.1f, 0.3f, 0.6f));
 
     MeshRenderer mesh_renderer;
     Shader shader;
     shader.Init("basic.glsl");
 
-    Shader light_shader;
-    light_shader.Init("light_pass.glsl");
-
-    glUseProgram(light_shader.m_shader_program);
-    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "position_tex"), GBuffer::tex_position);
-    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "diffuse_tex"), GBuffer::tex_diffuse);
-    glUniform1i(glGetUniformLocation(light_shader.m_shader_program, "normal_tex"), GBuffer::tex_normal);
-
     Shader shadow_pass;
     shadow_pass.Init("shadow_pass.glsl");
 
-    static const GLfloat quad_vertices[] = {
-        -1.0f, -1.0f,
-         1.0f, -1.0f,
-        -1.0f,  1.0f,
-         1.0f,  1.0f
-    };;
-
-    GLuint quad;
-    glGenVertexArrays(1, &quad);
-    glBindVertexArray(quad);
-
-    GLuint quad_buf;
-    glGenBuffers(1, &quad_buf);
-    glBindBuffer(GL_ARRAY_BUFFER, quad_buf);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, quad_buf);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glBindVertexArray(0);
-
-    MeshLoader mesh_loader;
     TextureLoader texture_loader;
 
     entityx::EventManager events;
@@ -80,8 +70,11 @@ int main(void) {
     ent = entities.create();
     Transform* transform = ent.assign<Transform>().get();
     transform->parent = monkey_transform;
+    transform->pos = glm::vec3(-2.0f, 1.0f, 2.5f);
     ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), &shader, texture_loader.GetTexture("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
+
+    point_light->transform = transform;
 
     ent = entities.create();
     transform = ent.assign<Transform>().get();
@@ -101,12 +94,6 @@ int main(void) {
     shadow_camera.InitOrtho(16, 16, -10, 10);
     shadow_camera.orientation = glm::rotate(shadow_camera.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
     shadow_camera.UpdateMatrix();
-
-    glUseProgram(shader.m_shader_program);
-    glUniform1i(glGetUniformLocation(shader.m_shader_program, "shadowMap"), 1);
-    glUniformMatrix4fv(glGetUniformLocation(shader.m_shader_program, "lightMVP"), 1,
-                       GL_FALSE, glm::value_ptr(shadow_camera.combined));
-    glUseProgram(0);
 
     ShadowMap shadow_map;
     shadow_map.Init(1024, 1024);
@@ -144,11 +131,7 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         g_buffer.Read();
-
-        glUseProgram(light_shader.m_shader_program);
-        glUniform3fv(glGetUniformLocation(light_shader.m_shader_program, "cam_pos"), 1, glm::value_ptr(camera.position));
-        glBindVertexArray(quad);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        light_system.LightPass(&camera);
 
         ImGui::Render();
         window.SwapBuffers();

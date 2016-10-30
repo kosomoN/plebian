@@ -1,13 +1,12 @@
 @vertex
 #version 330
 
-layout(location = 0) in vec2 pos;
+layout(location = 0) in vec3 pos;
 
-out vec2 uv;
+uniform mat4 MVP;
 
 void main () {
-    gl_Position = vec4(pos, 0.0, 1.0);
-    uv = (pos + vec2(1)) / 2;
+    gl_Position = MVP * vec4(pos, 1.0);
 };
 
 @fragment
@@ -19,40 +18,50 @@ uniform sampler2D diffuse_tex;
 uniform sampler2D normal_tex;
 
 uniform vec3 cam_pos;
+uniform vec3 light_pos;
+uniform vec3 light_intensity;
+uniform vec3 attenuation;
+uniform vec2 screen_size;
 
-in vec2 uv;
-
-out vec4 frag_color;
+out vec3 frag_color;
 
 void main() {
+    vec2 uv = gl_FragCoord.xy / screen_size;
+
     vec3 normal = texture(normal_tex, uv).xyz;
     vec3 position = texture(position_tex, uv).xyz;
-    vec3 lightColor = vec3(1);
 
     float roughness = 0.1;
-    roughness = roughness * roughness;
-    vec3 eyeDir = normalize(cam_pos - position);
-    vec3 Ln = vec3(0, 1, 0);
-    vec3 h = normalize(Ln + eyeDir);
+    float metallic = 0.3;
+
+    vec3 frag_to_light = light_pos - position;
+    vec3 Ln = normalize(frag_to_light);
+    float dist = length(frag_to_light);
     float NdotL = dot(normal, Ln);
-    float k = 0.3;
+
+    vec3 attenuated_light = light_intensity / (attenuation.x + attenuation.y * dist + attenuation.z * dist * dist);
 
     vec3 specular = vec3(0.0);
     if (NdotL > 0.0) 
     {
         float cook = 0.0;
-        float NdotV = dot(normal, eyeDir);
-        float VdotH = dot(eyeDir, h);
+
+        vec3 eye_dir = normalize(cam_pos - position);
+        vec3 h = normalize(Ln + eye_dir);
+        float NdotV = dot(normal, eye_dir);
+        float VdotH = dot(eye_dir, h);
         float NdotH = dot(normal, h);
-        float fl = 0.8;
         
         // Fresnel
+        float fl = 0.8;
         float fresnel = fl + (1.0 - fl) * pow((1.0 - VdotH), 5.0);
 
         // Roughness
+        float roughness_sqr = roughness * roughness;
+
         float NdotHsq = NdotH * NdotH;
-        float r1 = 1.0 / (3.14 * roughness * pow(NdotH, 4.0));
-        float r2 = (NdotHsq - 1.0) / (roughness * NdotHsq);
+        float r1 = 1.0 / (3.14 * roughness_sqr * pow(NdotH, 4.0));
+        float r2 = (NdotHsq - 1.0) / (roughness_sqr * NdotHsq);
         float microfacetDist = 0.0;
         if (NdotL > 0.0 && NdotV > 0.0)
             microfacetDist = r1 * exp(r2);
@@ -64,11 +73,11 @@ void main() {
         float GGX = min(GA, min(GB, GC));
 
         cook = (fresnel * microfacetDist * GGX) / (3.14 * NdotL * NdotV);
-        specular = lightColor * (NdotL * (k + cook * (1.0 - k)));
+        specular = attenuated_light * (NdotL * (metallic + cook * (1.0 - metallic)));
     }
 
-    vec3 diffuse = lightColor * clamp(NdotL, 0.1f, 1);
-    frag_color = texture(diffuse_tex, uv);
-    frag_color.rgb *= (specular * diffuse);
-    frag_color.rgb = pow(frag_color.rgb, vec3(1.0/2.2));
+    vec3 diffuse = attenuated_light * clamp(NdotL, 0.1f, 1);
+    frag_color = texture(diffuse_tex, uv).rgb;
+    frag_color *= specular * diffuse;
+    frag_color = pow(frag_color, vec3(1.0/2.2));
 }

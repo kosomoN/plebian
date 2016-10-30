@@ -20,8 +20,8 @@ Mesh* MeshLoader::GetMesh(std::string name) {
 		}
 
 		tinyobj::mesh_t shape = shapes[0].mesh;
-		if (shape.positions.empty() || shape.normals.empty() || shape.texcoords.empty()) {
-			Log(Error, "One or more of the requried geometry properties are missing in %s", std::string(MESH_PATH + name).c_str());
+		if (shape.positions.empty()) {
+			Log(Error, "Mesh is missing vertices: %s", std::string(MESH_PATH + name).c_str());
 			return nullptr;
 		}
 
@@ -37,21 +37,27 @@ Mesh* MeshLoader::GetMesh(std::string name) {
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * shape.positions.size(), &shape.positions[0], GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, GL_FALSE, nullptr);
 
-		glEnableVertexAttribArray(1);
-		glGenBuffers(1, &(mesh->normal_buffer));
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->normal_buffer);
-		glBufferData(GL_ARRAY_BUFFER, shape.normals.size() * sizeof(float), &shape.normals[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GL_FALSE, nullptr);
+        if (!shape.normals.empty()) {
+            glEnableVertexAttribArray(1);
+            glGenBuffers(1, &(mesh->normal_buffer));
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->normal_buffer);
+            glBufferData(GL_ARRAY_BUFFER, shape.normals.size() * sizeof(float), &shape.normals[0], GL_STATIC_DRAW);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, GL_FALSE, nullptr);
+        }
 
-		glEnableVertexAttribArray(2);
-		glGenBuffers(1, &(mesh->tex_coord_buffer));
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->tex_coord_buffer);
-		glBufferData(GL_ARRAY_BUFFER, shape.texcoords.size() * sizeof(float), &shape.texcoords[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+        if (!shape.texcoords.empty()) {
+            glEnableVertexAttribArray(2);
+            glGenBuffers(1, &(mesh->tex_coord_buffer));
+            glBindBuffer(GL_ARRAY_BUFFER, mesh->tex_coord_buffer);
+            glBufferData(GL_ARRAY_BUFFER, shape.texcoords.size() * sizeof(float), &shape.texcoords[0], GL_STATIC_DRAW);
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+        }
 
-		glGenBuffers(1, &(mesh->index_buffer));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(unsigned int), &shape.indices[0], GL_STATIC_DRAW);
+        if (!shape.indices.empty()) {
+            glGenBuffers(1, &(mesh->index_buffer));
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->index_buffer);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indices.size() * sizeof(unsigned int), &shape.indices[0], GL_STATIC_DRAW);
+        }
 
 		glBindVertexArray(0);
 

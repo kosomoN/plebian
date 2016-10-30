@@ -9,7 +9,7 @@ class Shader {
 public:
 	bool Init(std::string name);
 
-	GLuint m_shader_program = 0;
+	GLuint shader_program = 0;
 private:
 	GLuint LoadShader(std::string content, GLenum shader_type);
 };
