@@ -95,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="renderer\light_system.cpp">
       <Filter>Source Files</Filter>
+	</ClCompile>
+    <ClCompile Include="renderer\environment_probe.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,10 +182,14 @@
     <ClInclude Include="renderer\g_buffer.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="renderer\lights.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\light_system.h">
+=======
+    <ClInclude Include="renderer\environment_probe.h">
+>>>>>>> Add cubemap texture loading
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

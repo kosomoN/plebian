@@ -162,6 +162,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
+    <ClCompile Include="renderer\environment_probe.cpp" />
     <ClCompile Include="renderer\g_buffer.cpp" />
     <ClCompile Include="renderer\light_system.cpp" />
     <ClCompile Include="renderer\mesh_renderer.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="io\textureloader.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="renderer\camera.h" />
+    <ClInclude Include="renderer\environment_probe.h" />
     <ClInclude Include="renderer\g_buffer.h" />
     <ClInclude Include="renderer\light_system.h" />
     <ClInclude Include="renderer\mesh.h" />
