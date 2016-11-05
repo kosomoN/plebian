@@ -31,7 +31,7 @@ bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_heig
 void LightSystem::LightPass(Camera* camera)
 {
     glUseProgram(light_shader.shader_program);
-    glUniform3fv(glGetUniformLocation(light_shader.shader_program, "cam_pos"), 1, glm::value_ptr(camera->position));
+    glUniform3fv(glGetUniformLocation(light_shader.shader_program, "cam_pos"), 1, glm::value_ptr(camera->transform.pos));
 
     glBindVertexArray(sphere_mesh->vertex_array_object);
 

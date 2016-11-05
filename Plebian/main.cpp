@@ -86,13 +86,13 @@ int main(void) {
 
     Camera camera;
     camera.InitPerspective(1280, 720, 60);
-    camera.position = glm::vec3(0.f, 0.f, 5.f);
+    camera.transform.pos= glm::vec3(0.f, 0.f, 5.f);
     window.resizeListeners.push_back(&camera);
     glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     Camera shadow_camera;
     shadow_camera.InitOrtho(16, 16, -10, 10);
-    shadow_camera.orientation = glm::rotate(shadow_camera.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
+    shadow_camera.transform.orientation = glm::rotate(shadow_camera.transform.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
     shadow_camera.UpdateMatrix();
 
     ShadowMap shadow_map;

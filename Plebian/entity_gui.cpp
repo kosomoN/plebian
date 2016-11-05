@@ -21,6 +21,23 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
 
     struct funcs
     {
+        static void StartRow(int id, char* name)
+        {
+            ImGui::PushID(id);
+            ImGui::AlignFirstTextHeightToWidgets();
+            ImGui::Bullet();
+            ImGui::Selectable(name);
+            ImGui::NextColumn();
+            ImGui::PushItemWidth(-1);
+        }
+
+        static void EndRow()
+        {
+            ImGui::PopItemWidth();
+            ImGui::NextColumn();
+            ImGui::PopID();
+        }
+
         static void ShowCamera(Camera* camera)
         {
             ImGui::PushID(camera);
@@ -31,82 +48,29 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
             ImGui::NextColumn();
             if (node_open)
             {
-                int i = 0;
-                ImGui::PushID(i++);
-                ImGui::AlignFirstTextHeightToWidgets();
-                ImGui::Bullet();
-                ImGui::Selectable("Position");
-                ImGui::NextColumn();
-                ImGui::PushItemWidth(-1);
-                ImGui::DragFloat3("##value", &camera->position[0], 0.01f);
-                ImGui::PopItemWidth();
-                ImGui::NextColumn();
-                ImGui::PopID();
-
-                ImGui::PushID(i++);
-                ImGui::AlignFirstTextHeightToWidgets();
-                ImGui::Bullet();
-                ImGui::Selectable("Rotation");
-                ImGui::NextColumn();
-                ImGui::PushItemWidth(-1);
-                ImGui::DragQuat("##value", &camera->orientation);
-                ImGui::PopItemWidth();
-                ImGui::NextColumn();
-                ImGui::PopID();
-
-                ImGui::PushID(i++);
-                ImGui::AlignFirstTextHeightToWidgets();
-                ImGui::Bullet();
-                ImGui::Selectable("Rotation Quat");
-                ImGui::NextColumn();
-                ImGui::PushItemWidth(-1);
-                ImGui::DragFloat4("##value", &camera->orientation[0], 0.01f);
-                ImGui::PopItemWidth();
-                ImGui::NextColumn();
-                ImGui::PopID();
-
+                int id = 0;
+                ShowTranform(&camera->transform, id);
                 ImGui::TreePop();
             }
             ImGui::PopID();
         }
 
-        static void ShowTranform(Transform* transform, int& imgui_id)
+        static void ShowTranform(Transform* transform, int& id)
         {
-            ImGui::PushID(imgui_id++);
-            ImGui::AlignFirstTextHeightToWidgets();
-            ImGui::Bullet();
-            ImGui::Selectable("Position");
-            ImGui::NextColumn();
-            ImGui::PushItemWidth(-1);
+            StartRow(id++, "Position");
             ImGui::DragFloat3("##value", &transform->pos[0], 0.01f);
-            ImGui::PopItemWidth();
-            ImGui::NextColumn();
-            ImGui::PopID();
+            EndRow();
 
-            ImGui::PushID(imgui_id++);
-            ImGui::AlignFirstTextHeightToWidgets();
-            ImGui::Bullet();
-            ImGui::Selectable("Rotation");
-            ImGui::NextColumn();
-            ImGui::PushItemWidth(-1);
+            StartRow(id++, "Rotation");
             ImGui::DragQuat("##value", &transform->orientation);
-            ImGui::PopItemWidth();
-            ImGui::NextColumn();
-            ImGui::PopID();
+            EndRow();
 
-            ImGui::PushID(imgui_id++);
-            ImGui::AlignFirstTextHeightToWidgets();
-            ImGui::Bullet();
-            ImGui::Selectable("Rotation Quat");
-            ImGui::NextColumn();
-            ImGui::PushItemWidth(-1);
-            ImGui::DragFloat4("##value", &transform->orientation[0], 0.01f);
-            ImGui::PopItemWidth();
-            ImGui::NextColumn();
-            ImGui::PopID();
+            StartRow(id++, "Rotation Quat");
+            ImGui::DragFloat4("##value", &transform->orientation[0], 0.01f, 0.0f, 1.0f);
+            EndRow();
 
             if (transform->parent) {
-                ImGui::PushID(imgui_id++);
+                ImGui::PushID(id++);
                 ImGui::AlignFirstTextHeightToWidgets();
                 bool node_open = ImGui::TreeNode("Parent", "Parent");
                 ImGui::NextColumn();
@@ -114,7 +78,7 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
                 ImGui::NextColumn();
 
                 if (node_open) {
-                    ShowTranform(transform->parent, imgui_id);
+                    ShowTranform(transform->parent, id);
                     ImGui::TreePop();
                 }
                 ImGui::PopID();
