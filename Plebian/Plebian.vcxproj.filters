@@ -185,14 +185,13 @@
     <ClInclude Include="renderer\g_buffer.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="renderer\lights.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\light_system.h">
-=======
+		 <Filter>Source Files\Rendering</Filter>
+	</ClInclude>
     <ClInclude Include="renderer\environment_probe.h">
->>>>>>> Add cubemap texture loading
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cube_renderer.h">
