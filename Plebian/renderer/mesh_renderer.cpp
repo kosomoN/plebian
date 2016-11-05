@@ -26,21 +26,20 @@ void MeshRenderer::Render(float delta, Camera& cam, Camera& light_camera, GLuint
 
     for (entityx::Entity e : entities) {
         Transform* transform = e.component<Transform>().get();
-        MeshComponent* meshComponent = e.component<MeshComponent>().get();
-        Mesh* mesh = meshComponent->mesh;
+        MeshComponent* mesh_component = e.component<MeshComponent>().get();
+        Mesh* mesh = mesh_component->mesh;
+        Texture* texture = mesh_component->texture;
 
         if (!mesh) continue;
 
-        if (!shader_override && current_shader != meshComponent->shader->shader_program) {
-            current_shader = meshComponent->shader->shader_program;
+        if (!shader_override && current_shader != mesh_component->shader->shader_program) {
+            current_shader = mesh_component->shader->shader_program;
             glUseProgram(current_shader);
         }
 
-        if (meshComponent->texture &&
-                current_tex != meshComponent->texture->texture_id) {
-
+        if (texture && current_tex != texture->texture_id) {
             glActiveTexture(GL_TEXTURE0);
-            current_tex = meshComponent->texture->texture_id;
+            current_tex = texture->texture_id;
             glBindTexture(GL_TEXTURE_2D, current_tex);
         }
 
@@ -50,6 +49,8 @@ void MeshRenderer::Render(float delta, Camera& cam, Camera& light_camera, GLuint
 
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
         glUniformMatrix4fv(glGetUniformLocation(current_shader, "worldMat"), 1, GL_FALSE, glm::value_ptr(worldMat));
+        glUniform2f(glGetUniformLocation(current_shader, "material"), mesh_component->material.roughness,
+                                                                      mesh_component->material.metallic);
 
         glBindVertexArray(mesh->vertex_array_object);
         glDrawElements(GL_TRIANGLES, mesh->num_indices, GL_UNSIGNED_INT, 0);

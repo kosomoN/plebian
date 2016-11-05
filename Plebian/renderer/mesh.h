@@ -12,5 +12,11 @@ struct Mesh {
 	GLsizei num_indices;
 };
 
+struct Material {
+    Material(float roughness, float metallic)
+            : roughness(roughness), metallic(metallic) {}
+    float roughness = 0, metallic = 0;
+};
+
 
 #endif // MESH_H_

@@ -49,7 +49,7 @@ int main(void) {
 
     PointLight* point_light = light_system.CreatePointLight();
     point_light->intensity = glm::vec3(10.0f, 10.0f, 10.f);
-    point_light->SetAttenuation(glm::vec3(0.1f, 0.3f, 0.6f));
+    point_light->radius = 20;
 
     MeshRenderer mesh_renderer;
     Shader shader;
@@ -64,23 +64,34 @@ int main(void) {
     entityx::EntityManager entities(events);
     entityx::Entity ent = entities.create();
     Transform* monkey_transform = ent.assign<Transform>().get();
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), &shader, texture_loader.GetTexture("suzanne.png"));
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
     ent = entities.create();
     Transform* transform = ent.assign<Transform>().get();
     transform->parent = monkey_transform;
-    transform->pos = glm::vec3(-2.0f, 1.0f, 2.5f);
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), &shader, texture_loader.GetTexture("mona_lisa.png"));
+    transform->pos = glm::vec3(0.0f, 10.0f, 0.0f);
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
 
     point_light->transform = transform;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            ent = entities.create();
+            transform = ent.assign<Transform>().get();
+            transform->parent = monkey_transform;
+            transform->pos = glm::vec3(i * 1.5f  - 6, 0, j * 1.5f - 6);
+            ent.assign<MeshComponent>(mesh_loader.GetMesh("smooth_sphere.obj"), Material((i + 1) / 8.0f, j / 7.0f), &shader, texture_loader.GetTexture("yellow.png"));
+            mesh_renderer.RegisterEntity(ent);
+        }
+    }
 
     ent = entities.create();
     transform = ent.assign<Transform>().get();
     transform->parent = monkey_transform;
     transform->pos.y = -2.5f;
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), &shader, texture_loader.GetTexture("suzanne.png"));
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
 

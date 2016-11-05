@@ -93,9 +93,6 @@
     <ClCompile Include="renderer\g_buffer.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\lights.cpp">
-      <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\light_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

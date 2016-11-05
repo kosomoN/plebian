@@ -37,11 +37,11 @@ void LightSystem::LightPass(Camera* camera)
 
     for (PointLight& l : point_lights) {
         glm::mat4 world_mat = l.transform->WorldSpace();
-        glm::mat4 mvp = camera->combined * world_mat * glm::scale(glm::mat4(), glm::vec3(l.GetRadius()));
+        glm::mat4 mvp = camera->combined * world_mat * glm::scale(glm::mat4(), glm::vec3(l.radius));
         glUniformMatrix4fv(glGetUniformLocation(light_shader.shader_program, "MVP"), 1, GL_FALSE, glm::value_ptr(mvp));
         glUniform3fv(glGetUniformLocation(light_shader.shader_program, "light_pos"), 1, glm::value_ptr(world_mat * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
         glUniform3fv(glGetUniformLocation(light_shader.shader_program, "light_intensity"), 1, glm::value_ptr(l.intensity));
-        glUniform3fv(glGetUniformLocation(light_shader.shader_program, "attenuation"), 1, glm::value_ptr(l.GetAttenuation()));
+        glUniform1f(glGetUniformLocation(light_shader.shader_program, "inv_sqr_radius"), 1.0f / (l.radius * l.radius));
 
         glDrawElements(GL_TRIANGLES, sphere_mesh->num_indices, GL_UNSIGNED_INT, 0);
     }

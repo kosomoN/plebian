@@ -25,16 +25,18 @@ void main () {
 
 uniform sampler2D diffuseTex;
 
+uniform vec2 material;
+
 in vec3 vertNormal;
 in vec2 uv;
 in vec3 vertexPos;
 
 layout (location = 0) out vec3 world_pos_out;
-layout (location = 1) out vec3 diffuse_out;
-layout (location = 2) out vec3 normal_out;
+layout (location = 1) out vec4 diffuse_out;
+layout (location = 2) out vec4 normal_out;
 
 void main() {
-    normal_out = normalize(vertNormal);
     world_pos_out = vertexPos;
-    diffuse_out = texture(diffuseTex, uv).rgb;
+    diffuse_out = vec4(texture(diffuseTex, uv).rgb, material.x);
+    normal_out = vec4(normalize(vertNormal), material.y);
 }

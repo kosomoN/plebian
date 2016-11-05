@@ -101,6 +101,20 @@ void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* enti
                     ShowTranform(transform_handle.get(), i);
                 }
 
+                auto mesh_handle = ent.component<MeshComponent>();
+                if (mesh_handle) {
+                    ImGui::PushID(i++);
+                    ImGui::AlignFirstTextHeightToWidgets();
+                    ImGui::Bullet();
+                    ImGui::Selectable("Roughness, metallic");
+                    ImGui::NextColumn();
+                    ImGui::PushItemWidth(-1);
+                    ImGui::DragFloat2("##value", reinterpret_cast<float*>(&mesh_handle->material), 0.01f, 0.0f, 1.0f);
+                    ImGui::PopItemWidth();
+                    ImGui::NextColumn();
+                    ImGui::PopID();
+                }
+
                 ImGui::TreePop();
             }
             ImGui::PopID();

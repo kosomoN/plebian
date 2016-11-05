@@ -10,11 +10,6 @@ struct BaseLight {
 };
 
 struct PointLight : public BaseLight {
-    void SetAttenuation(glm::vec3 attenuation);
-    glm::vec3 GetAttenuation() { return attenuation; }
-    float GetRadius() { return radius; }
-private:
-    glm::vec3 attenuation;
     float radius;
 };
 

@@ -163,7 +163,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\g_buffer.cpp" />
-    <ClCompile Include="renderer\lights.cpp" />
     <ClCompile Include="renderer\light_system.cpp" />
     <ClCompile Include="renderer\mesh_renderer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />

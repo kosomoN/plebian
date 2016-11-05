@@ -9,9 +9,10 @@
 #include "renderer/texture.h"
 
 struct MeshComponent : entityx::Component<MeshComponent> {
-    MeshComponent(Mesh* mesh, Shader* shader, Texture* texture)
-        : mesh(mesh), shader(shader), texture(texture) {}
+    MeshComponent(Mesh* mesh, Material material, Shader* shader, Texture* texture)
+        : mesh(mesh), material(material), shader(shader), texture(texture) {}
     Mesh* mesh = nullptr;
+    Material material;
     Shader* shader = nullptr;
     Texture* texture = nullptr;
 };
