@@ -8,7 +8,7 @@ void Camera::InitOrtho(float cam_width, float cam_height, float near_, float far
     near = near_;
     far = far_;
     Resize(cam_width, cam_height);
-    UpdateMatrix();
+    UpdateMatrix(nullptr);
 }
 
 void Camera::InitPerspective(float cam_width, float cam_height, float cam_fov)
@@ -16,10 +16,14 @@ void Camera::InitPerspective(float cam_width, float cam_height, float cam_fov)
     perspective = true;
     fov = cam_fov;
     Resize(cam_width, cam_height);
-    UpdateMatrix();
+    UpdateMatrix(nullptr);
 }
 
-void Camera::UpdateMatrix() {
+void Camera::UpdateMatrix(glm::mat4* view) {
+	if (view) {
+		combined = *(view) * projectionMatrix;
+		return;
+	}
 	combined = projectionMatrix * glm::mat4_cast(transform.orientation) * glm::translate(glm::mat4(), -transform.pos);
 }
 
