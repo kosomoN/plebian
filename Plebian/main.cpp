@@ -64,14 +64,14 @@ int main(void) {
     entityx::EntityManager entities(events);
     entityx::Entity ent = entities.create();
     Transform* monkey_transform = ent.assign<Transform>().get();
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture("suzanne.png"));
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
     ent = entities.create();
     Transform* transform = ent.assign<Transform>().get();
     transform->parent = monkey_transform;
     transform->pos = glm::vec3(0.0f, 10.0f, 0.0f);
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture("mona_lisa.png"));
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture2d("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
 
     point_light->transform = transform;
@@ -82,7 +82,7 @@ int main(void) {
             transform = ent.assign<Transform>().get();
             transform->parent = monkey_transform;
             transform->pos = glm::vec3(i * 1.5f  - 6, 0, j * 1.5f - 6);
-            ent.assign<MeshComponent>(mesh_loader.GetMesh("smooth_sphere.obj"), Material((i + 1) / 8.0f, j / 7.0f), &shader, texture_loader.GetTexture("yellow.png"));
+            ent.assign<MeshComponent>(mesh_loader.GetMesh("smooth_sphere.obj"), Material((i + 1) / 8.0f, j / 7.0f), &shader, texture_loader.GetTexture2d("yellow.png"));
             mesh_renderer.RegisterEntity(ent);
         }
     }
@@ -91,7 +91,7 @@ int main(void) {
     transform = ent.assign<Transform>().get();
     transform->parent = monkey_transform;
     transform->pos.y = -2.5f;
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture("suzanne.png"));
+    ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
 
@@ -104,7 +104,8 @@ int main(void) {
     Camera shadow_camera;
     shadow_camera.InitOrtho(16, 16, -10, 10);
     shadow_camera.transform.orientation = glm::rotate(shadow_camera.transform.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
-    shadow_camera.UpdateMatrix();
+    shadow_camera.UpdateMatrix(nullptr);
+
 
     ShadowMap shadow_map;
     shadow_map.Init(1024, 1024);
@@ -130,7 +131,7 @@ int main(void) {
         ShowEntityEditor(&show_entity_editor, &camera, &entities);
 
         camController.Update(delta);
-        camera.UpdateMatrix();
+        camera.UpdateMatrix(nullptr);
 
         glViewport(0, 0, window.width, window.height);
         g_buffer.Draw();

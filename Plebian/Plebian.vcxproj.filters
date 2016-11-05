@@ -99,6 +99,9 @@
     <ClCompile Include="renderer\environment_probe.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\cube_renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -190,6 +193,9 @@
 =======
     <ClInclude Include="renderer\environment_probe.h">
 >>>>>>> Add cubemap texture loading
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\cube_renderer.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>

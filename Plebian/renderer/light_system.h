@@ -26,6 +26,7 @@ private:
 
     Mesh* sphere_mesh;
     Shader light_shader;
+	Texture* cubemap;
 };
 
 #endif // LIGHT_SYSTEM_H_

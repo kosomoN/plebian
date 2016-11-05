@@ -4,9 +4,20 @@
 
 #include "log.h"
 #include "renderer/g_buffer.h"
+#include <io/textureloader.h>
 
 bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_height)
 {
+	std::string** textures;
+	textures = new std::string*[1];
+	textures[0] = new std::string[6];
+	textures[0][0] = "posx.png";
+	textures[0][1] = "negx.png";
+	textures[0][2] = "posy.png";
+	textures[0][3] = "negy.png";
+	textures[0][4] = "posz.png";
+	textures[0][5] = "negz.png";
+	cubemap = TextureLoader().GetTexture3d(textures, 1);
     sphere_mesh = mesh_loader.GetMesh("sphere.obj");
     if (sphere_mesh == nullptr) {
         Log(Error, "Failed to load sphere mesh for light system");
@@ -34,6 +45,9 @@ void LightSystem::LightPass(Camera* camera)
     glUniform3fv(glGetUniformLocation(light_shader.shader_program, "cam_pos"), 1, glm::value_ptr(camera->transform.pos));
 
     glBindVertexArray(sphere_mesh->vertex_array_object);
+	glActiveTexture(GL_TEXTURE22);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->texture_id);
+	glUniform1i(glGetUniformLocation(light_shader.shader_program, "cubemap"), 22);
 
     for (PointLight& l : point_lights) {
         glm::mat4 world_mat = l.transform->WorldSpace();
