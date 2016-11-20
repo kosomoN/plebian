@@ -1,6 +1,10 @@
 #include <entityx/Entity.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <RakPeerInterface.h>
+#include <BitStream.h>
+#include <MessageIdentifiers.h>
+#include <NetworkIDManager.h>
 #include <GetTime.h>
 
 #include "renderer/window.h"
@@ -20,10 +24,48 @@
 #include "renderer/g_buffer.h"
 #include "renderer/light_system.h"
 #include "log.h"
+#include "network/network_connection.h"
+#include "network/network_defines.h"
 
-#define TICK_LENGTH_MS (1000.0f / 20.0f)
+using namespace RakNet;
 
 int main(void) {
+
+    NetworkConnection net_conn;
+    StartupResult raknet_startup = net_conn.Startup();
+    if (raknet_startup != RAKNET_STARTED) {
+        Log(Error, "Failed to start RakNet, error: 0x%x", raknet_startup);
+        exit(1);
+    }
+
+    entityx::EventManager events;
+    entityx::EntityManager entities(events);
+
+    uint32_t current_tick = 0;
+
+    ConnectionAttemptResult conn_attempt = net_conn.Connect("localhost", 51851);
+    if (conn_attempt != CONNECTION_ATTEMPT_STARTED) {
+        Log(Error, "Failed to start connection attempt, error: 0x%x", conn_attempt);
+        exit(1);
+    }
+
+    TimeMS server_start_time;
+    bool received_time = false;
+    while (!received_time) {
+        for (Packet* packet = net_conn.peer->Receive(); packet; net_conn.peer->DeallocatePacket(packet), packet = net_conn.peer->Receive()) {
+            if (packet->data[0] == ID_START_TIME) {
+                if (packet->length == sizeof(MessageID) + sizeof(TimeMS))
+                {
+                    BitStream ts_bs(packet->data + sizeof(MessageID), packet->length - 1, false);
+                    ts_bs.Read(server_start_time);
+
+                    received_time = true;
+                    break;
+                }
+            }
+        }
+    }
+
     Window window;
     if (!window.Init(1280, 720)) {
         Log(Error, "Failed to initialize window");
@@ -64,8 +106,6 @@ int main(void) {
 
     TextureLoader texture_loader;
 
-    entityx::EventManager events;
-    entityx::EntityManager entities(events);
     entityx::Entity ent = entities.create();
     Transform* monkey_transform = ent.assign<Transform>().get();
     ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
@@ -121,20 +161,33 @@ int main(void) {
     ImGuiListener guiListener;
     window.GetInput()->AddListener(&guiListener);
 
-    RakNet::TimeMS game_time = RakNet::GetTimeMS(), last_update_time = 0;
+    TimeMS game_time = GetTimeMS(), last_update_time = 0;
     float dt, accumulated_ticks = 0;
-    uint32_t current_tick = 0;
+
+    Time clock_diff = net_conn.peer->GetClockDifferential(net_conn.peer->GetGUIDFromIndex(0));
+    current_tick = (uint32_t)((GetTimeMS() - server_start_time - clock_diff) / TICK_LENGTH_MS);
 
     bool show_entity_editor = true;
     while (!window.ShouldClose()) {
-        dt = (float) (RakNet::GetTimeMS() - game_time);
-        game_time = RakNet::GetTimeMS();
+        dt = (float) (GetTimeMS() - game_time);
+        game_time = GetTimeMS();
 
         window.UpdateInput();
 
         accumulated_ticks += dt / TICK_LENGTH_MS;
         int ticks_processed = 0;
         while (accumulated_ticks >= 1 && ticks_processed++ < 10) {
+
+            // sync ticks with server
+            Time clock_diff = net_conn.peer->GetClockDifferential(net_conn.peer->GetGUIDFromIndex(0));
+            uint32_t server_tick = (uint32_t)((GetTimeMS() - server_start_time - clock_diff) / TICK_LENGTH_MS);
+            accumulated_ticks += ((float) server_tick - current_tick) / 10.0f;
+
+            Packet* packet;
+            for (packet = net_conn.peer->Receive(); packet; net_conn.peer->DeallocatePacket(packet), packet = net_conn.peer->Receive())
+            {
+            }
+
             accumulated_ticks--;
             current_tick++;
         }
@@ -162,5 +215,6 @@ int main(void) {
         window.SwapBuffers();
     }
 
+    net_conn.peer->Shutdown(300);
     window.GetInput()->ClearListeners();
 }

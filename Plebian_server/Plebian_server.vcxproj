@@ -146,7 +146,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Plebian\log.cpp" />
+    <ClCompile Include="..\Plebian\network\network_connection.cpp" />
+    <ClCompile Include="..\Plebian\network\packet_processor.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Plebian\log.h" />
+    <ClInclude Include="..\Plebian\network\network_connection.h" />
+    <ClInclude Include="..\Plebian\network\packet_processor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

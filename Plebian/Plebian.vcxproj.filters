@@ -31,6 +31,9 @@
     <Filter Include="Source Files\input">
       <UniqueIdentifier>{afeb84ed-43c6-4134-9709-2eb470f9475a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\network">
+      <UniqueIdentifier>{9e88efa7-f482-4ae8-9883-b4f0b7890bdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -95,12 +98,18 @@
     </ClCompile>
     <ClCompile Include="renderer\light_system.cpp">
       <Filter>Source Files</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="renderer\environment_probe.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="renderer\cube_renderer.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="network\network_connection.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\packet_processor.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,13 +198,22 @@
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\light_system.h">
-		 <Filter>Source Files\Rendering</Filter>
-	</ClInclude>
+      <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
     <ClInclude Include="renderer\environment_probe.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\cube_renderer.h">
       <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="network\network_connection.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\packet_processor.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\network_defines.h">
+      <Filter>Source Files\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,29 +1,30 @@
 #include <iostream>
 #include <string>
 #include <RakPeerInterface.h>
+#include <BitStream.h>
 #include <MessageIdentifiers.h>
 #include <NetworkIDManager.h>
 #include <entityx/entityx.h>
 #include <GetTime.h>
 
+#include "network/network_defines.h"
+
 #define MAX_CLIENTS 16
 #define SERVER_PORT 51851
-
-#define TICK_LENGTH_MS (1000.0f / 20.0f)
 
 using namespace RakNet;
 
 int main(void)
 {
-    RakNet::RakPeerInterface *peer = RakNet::RakPeerInterface::GetInstance();
-    RakNet::Packet *packet;
+    RakPeerInterface *peer = RakPeerInterface::GetInstance();
+    Packet *packet;
 
     entityx::EventManager events;
     entityx::EntityManager entities(events);
 
     uint32_t current_tick = 0;
 
-    RakNet::SocketDescriptor sd(SERVER_PORT, 0);
+    SocketDescriptor sd(SERVER_PORT, 0);
     peer->Startup(MAX_CLIENTS, &sd, 1);
     peer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
@@ -60,8 +61,14 @@ int main(void)
                     printf("Our connection request has been accepted.\n");
                     break;
                 case ID_NEW_INCOMING_CONNECTION:
+                {
                     printf("A connection is incoming.\n");
+                    BitStream bs(sizeof(MessageID) + sizeof(TimeMS));
+                    bs.Write((MessageID)ID_START_TIME);
+                    bs.Write((TimeMS)start_time);
+                    peer->Send(&bs, HIGH_PRIORITY, RELIABLE, 0, packet->guid, false);
                     break;
+                }
                 case ID_NO_FREE_INCOMING_CONNECTIONS:
                     printf("The server is full.\n");
                     break;
@@ -85,7 +92,7 @@ int main(void)
     }
 
 
-    RakNet::RakPeerInterface::DestroyInstance(peer);
+    RakPeerInterface::DestroyInstance(peer);
 }
 
 
