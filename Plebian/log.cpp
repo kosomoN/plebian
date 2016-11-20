@@ -1,24 +1,29 @@
 #include "log.h"
 
-#include <time.h>
+#include <ctime>
 #include <iostream>
 #include <cstdarg>
 #include <termcolor/termcolor.hpp>
 
 void Log(LogLevel logLevel, const char* format, ...) {
-    time_t t = time(0);
-    struct tm* now = localtime(&t);
+    std::time_t t = std::time(nullptr);
+    tm now;
+    localtime_s(&now, &t);
     switch(logLevel) {
     case Info:
-        printf("[%02d:%02d:%02d]  INFO : ", now->tm_hour, now->tm_min, now->tm_sec);
+        printf("[%02d:%02d:%02d]  INFO : ", now.tm_hour, now.tm_min, now.tm_sec);
         break;
     case Warn:
         std::cout << termcolor::yellow;
-        printf("[%02d:%02d:%02d]  WARN : ", now->tm_hour, now->tm_min, now->tm_sec);
+        printf("[%02d:%02d:%02d]  WARN : ", now.tm_hour, now.tm_min, now.tm_sec);
         break;
     case Error:
         std::cout << termcolor::red;
-        printf("[%02d:%02d:%02d] ERROR : ", now->tm_hour, now->tm_min, now->tm_sec);
+        printf("[%02d:%02d:%02d] ERROR : ", now.tm_hour, now.tm_min, now.tm_sec);
+        break;
+    case Debug:
+        std::cout << termcolor::cyan;
+        printf("[%02d:%02d:%02d] DEBUG : ", now.tm_hour, now.tm_min, now.tm_sec);
         break;
     }
     va_list args;
