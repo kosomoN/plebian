@@ -5,6 +5,7 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui_internal.h"
 #include "components.h"
+#include "transform.h"
 
 void ShowEntityEditor(bool* p_open, Camera* camera, entityx::EntityManager* entity_manager)
 {

@@ -7,7 +7,10 @@
 #include <entityx/entityx.h>
 #include <GetTime.h>
 
+#include "network/replica_manager.h"
+#include "network/entity_replica.h"
 #include "network/network_defines.h"
+#include "transform.h"
 
 #define MAX_CLIENTS 16
 #define SERVER_PORT 51851
@@ -23,6 +26,20 @@ int main(void)
     entityx::EntityManager entities(events);
 
     uint32_t current_tick = 0;
+
+    ReplicaManager replica_manager(&entities, current_tick);
+    RakNet::NetworkIDManager network_id_manager;
+    peer->AttachPlugin(&replica_manager);
+    replica_manager.SetNetworkIDManager(&network_id_manager);
+    // serialize every tick
+    replica_manager.SetAutoSerializeInterval(0);
+
+    entityx::Entity entity = entities.create();
+    Transform* transform = entity.assign<Transform>().get();
+    transform->pos = glm::vec3(1.0f, 2.0f, 3.0f);
+
+    EntityReplica entity_replica(entity, current_tick);
+    replica_manager.Reference(&entity_replica);
 
     SocketDescriptor sd(SERVER_PORT, 0);
     peer->Startup(MAX_CLIENTS, &sd, 1);
@@ -85,6 +102,8 @@ int main(void)
 
                 peer->DeallocatePacket(packet);
             }
+
+            transform->pos = glm::vec3(cos(TICK_LENGTH_MS * current_tick / 500.0) * 3, cos(TICK_LENGTH_MS * current_tick / 900.0) * 0.5 + cos(TICK_LENGTH_MS * current_tick / 600.0) * 0.1, -sin(TICK_LENGTH_MS * current_tick / 500.0) * 3);
 
             current_tick++;
             accumulated_ticks--;

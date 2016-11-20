@@ -1,5 +1,7 @@
 #include "transform.h"
 
+#include "log.h"
+
 glm::mat4 Transform::WorldSpace() {
     glm::mat4 worldSpace;
     ParentWorldSpace(worldSpace);
@@ -13,13 +15,20 @@ void Transform::ParentWorldSpace(glm::mat4& child) {
         parent->ParentWorldSpace(child);
 }
 
-
-TransformHistoryComponent::TransformHistoryComponent() {
-    for (int i = 0; i < LERP_HISTORY_LENGTH; i++)
-        states[i].timestamp = -1;
+void Transform::Serialize(RakNet::SerializeParameters *ser)
+{
+    ser->outputBitstream->WriteVector(pos.x, pos.y, pos.z);
+    ser->outputBitstream->WriteNormQuat(orientation.x, orientation.y, orientation.z, orientation.w);
 }
 
-void TransformHistoryComponent::AddState(glm::vec3 pos, glm::quat orientation, int timestamp) {
+bool Transform::Deserialize(RakNet::DeserializeParameters *deser)
+{
+    if (!deser->serializationBitstream->ReadVector(pos.x, pos.y, pos.z)) return false;
+    if (!deser->serializationBitstream->ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
+    return true;
+}
+
+void TransformHistoryComponent::AddState(glm::vec3 pos, glm::quat orientation, uint32_t timestamp) {
     if (timestamp < states[0].timestamp) return;
 
     for (int i = LERP_HISTORY_LENGTH - 1; i > 0; i--) {
@@ -28,6 +37,19 @@ void TransformHistoryComponent::AddState(glm::vec3 pos, glm::quat orientation, i
     states[0].pos = pos;
     states[0].orientation = orientation;
     states[0].timestamp = timestamp;
+    states[0].initialized = true;
+}
+
+bool TransformHistoryComponent::DeserializeState(RakNet::DeserializeParameters *deser, uint32_t timestamp)
+{
+    glm::vec3 pos;
+    glm::quat orientation;
+    if (!deser->serializationBitstream->ReadVector(pos.x, pos.y, pos.z)) return false;
+    if (!deser->serializationBitstream->ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
+
+    AddState(pos, orientation, timestamp);
+
+    return true;
 }
 
 void TransformHistoryComponent::ReadState(float lerp_time, glm::vec3& pos, glm::quat& orientation) {
@@ -37,7 +59,7 @@ void TransformHistoryComponent::ReadState(float lerp_time, glm::vec3& pos, glm::
         unsigned int timestamp = states[i].timestamp;
 
         // uninitialized state
-        if (timestamp == -1) continue;
+        if (!states[i].initialized) continue;
 
         if (timestamp > lerp_time) {
 

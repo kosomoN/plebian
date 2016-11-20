@@ -25,6 +25,7 @@
 #include "renderer/light_system.h"
 #include "log.h"
 #include "network/network_connection.h"
+#include "network/replica_manager.h"
 #include "network/network_defines.h"
 
 using namespace RakNet;
@@ -42,6 +43,11 @@ int main(void) {
     entityx::EntityManager entities(events);
 
     uint32_t current_tick = 0;
+
+    ReplicaManager replica_manager(&entities, current_tick);
+    RakNet::NetworkIDManager network_id_manager;
+    net_conn.peer->AttachPlugin(&replica_manager);
+    replica_manager.SetNetworkIDManager(&network_id_manager);
 
     ConnectionAttemptResult conn_attempt = net_conn.Connect("localhost", 51851);
     if (conn_attempt != CONNECTION_ATTEMPT_STARTED) {
@@ -113,7 +119,6 @@ int main(void) {
 
     ent = entities.create();
     Transform* transform = ent.assign<Transform>().get();
-    transform->parent = monkey_transform;
     transform->pos = glm::vec3(0.0f, 10.0f, 0.0f);
     ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture2d("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
@@ -124,7 +129,6 @@ int main(void) {
         for (int j = 0; j < 8; j++) {
             ent = entities.create();
             transform = ent.assign<Transform>().get();
-            transform->parent = monkey_transform;
             transform->pos = glm::vec3(i * 1.5f  - 6, 0, j * 1.5f - 6);
             ent.assign<MeshComponent>(mesh_loader.GetMesh("smooth_sphere.obj"), Material((i + 1) / 8.0f, j / 7.0f), &shader, texture_loader.GetTexture2d("yellow.png"));
             mesh_renderer.RegisterEntity(ent);
@@ -133,7 +137,6 @@ int main(void) {
 
     ent = entities.create();
     transform = ent.assign<Transform>().get();
-    transform->parent = monkey_transform;
     transform->pos.y = -2.5f;
     ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
@@ -190,6 +193,17 @@ int main(void) {
 
             accumulated_ticks--;
             current_tick++;
+        }
+
+        // just a hack until proper entity factories are made
+        // sets the monkey's position to the last created entity which is the networked one
+        int count = 0;
+        for (entityx::Entity entity : entities.entities_for_debugging()) {
+            count++;
+            if (count == 68) {
+                float integral_part;
+                entity.component<TransformHistoryComponent>().get()->ReadState(current_tick + modf(accumulated_ticks, &integral_part) - 4, monkey_transform->pos, monkey_transform->orientation);
+            }
         }
 
         camController.Update(dt);

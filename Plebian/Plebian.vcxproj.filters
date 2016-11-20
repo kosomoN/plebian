@@ -111,6 +111,15 @@
     <ClCompile Include="network\packet_processor.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="network\replica_manager.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="network\entity_replica.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="components.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -210,6 +219,12 @@
       <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="network\packet_processor.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\replica_manager.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\entity_replica.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
     <ClInclude Include="network\network_defines.h">

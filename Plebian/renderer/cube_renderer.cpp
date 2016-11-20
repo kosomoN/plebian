@@ -1,5 +1,6 @@
 #include "cube_renderer.h"
 
+#include <glm/glm.hpp>
 
 CubeRenderer::CubeRenderer(MeshRenderer* renderer, Camera& lightCamera, TextureLoader& textureLoader, int w, int h)
 {

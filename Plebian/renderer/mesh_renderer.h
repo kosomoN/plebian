@@ -3,6 +3,7 @@
 
 #include <entityx/entityx.h>
 #include "components.h"
+#include "transform.h"
 #include "renderer/camera.h"
 
 class MeshRenderer {

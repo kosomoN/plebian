@@ -17,7 +17,7 @@ bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_heig
 	textures[0][3] = "negy.png";
 	textures[0][4] = "posz.png";
 	textures[0][5] = "negz.png";
-	cubemap = TextureLoader().GetTexture3d(textures, 1);
+	//cubemap = TextureLoader().GetTexture3d(textures, 1);
     sphere_mesh = mesh_loader.GetMesh("sphere.obj");
     if (sphere_mesh == nullptr) {
         Log(Error, "Failed to load sphere mesh for light system");
@@ -46,7 +46,7 @@ void LightSystem::LightPass(Camera* camera)
 
     glBindVertexArray(sphere_mesh->vertex_array_object);
 	glActiveTexture(GL_TEXTURE22);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->texture_id);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->texture_id);
 	glUniform1i(glGetUniformLocation(light_shader.shader_program, "cubemap"), 22);
 
     for (PointLight& l : point_lights) {

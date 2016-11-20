@@ -153,6 +153,7 @@
     <ClCompile Include="..\inc\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\inc\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\inc\imgui\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="components.cpp" />
     <ClCompile Include="entity_gui.cpp" />
     <ClCompile Include="globalsystem.cpp" />
     <ClCompile Include="input\fp_camera_controller.cpp" />
@@ -161,8 +162,10 @@
     <ClCompile Include="io\textureloader.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network\entity_replica.cpp" />
     <ClCompile Include="network\network_connection.cpp" />
     <ClCompile Include="network\packet_processor.cpp" />
+    <ClCompile Include="network\replica_manager.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\cube_renderer.cpp" />
     <ClCompile Include="renderer\environment_probe.cpp" />
@@ -192,9 +195,11 @@
     <ClInclude Include="io\meshloader.h" />
     <ClInclude Include="io\textureloader.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="network\entity_replica.h" />
     <ClInclude Include="network\network_connection.h" />
     <ClInclude Include="network\network_defines.h" />
     <ClInclude Include="network\packet_processor.h" />
+    <ClInclude Include="network\replica_manager.h" />
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\cube_renderer.h" />
     <ClInclude Include="renderer\environment_probe.h" />

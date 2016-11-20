@@ -27,7 +27,19 @@
     <ClCompile Include="..\Plebian\network\packet_processor.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="..\Plebian\network\replica_manager.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plebian\transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\Plebian\log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plebian\network\entity_replica.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Plebian\components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +50,19 @@
     <ClInclude Include="..\Plebian\network\packet_processor.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
+    <ClInclude Include="..\Plebian\network\replica_manager.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\transform.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\Plebian\log.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\network\entity_replica.h">
+      <Filter>Source Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\components.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

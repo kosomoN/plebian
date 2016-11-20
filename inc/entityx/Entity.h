@@ -146,6 +146,8 @@ public:
   template <typename C, typename = typename std::enable_if<std::is_const<C>::value>::type>
   const ComponentHandle<C, const EntityManager> component() const;
 
+  void* component(size_t component_family);
+
   template <typename ... Components>
   std::tuple<ComponentHandle<Components>...> components();
 
@@ -709,6 +711,24 @@ class EntityManager : entityx::help::NonCopyable {
       return ComponentHandle<C>();
     return ComponentHandle<C>(this, id);
   }
+
+  /**
+  * Retrieve a Component by family id assigned to an Entity::Id.
+  *
+  * @returns Pointer to an instance of the component, or nullptr if the Entity::Id does not have that Component.
+  */
+  void* component(Entity::Id id, size_t component_family) {
+      assert_valid(id);
+      size_t family = component_family;
+      // We don't bother checking the component mask, as we return a nullptr anyway.
+      if (family >= component_pools_.size())
+          return nullptr;
+      BasePool *pool = component_pools_[family];
+      if (!pool || !entity_component_mask_[id.index()][family])
+          return nullptr;
+      return pool->get(id.index());
+  }
+
 
   /**
    * Retrieve a Component assigned to an Entity::Id.
