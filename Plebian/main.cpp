@@ -1,13 +1,15 @@
-#include "renderer/window.h"
-
 #include <entityx/Entity.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <GetTime.h>
+
+#include "renderer/window.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
 #include "input/input.h"
 #include "input/fp_camera_controller.h"
 #include "components.h"
+#include "transform.h"
 #include "io/meshloader.h"
 #include "io/textureloader.h"
 #include "renderer/mesh_renderer.h"
@@ -18,6 +20,8 @@
 #include "renderer/g_buffer.h"
 #include "renderer/light_system.h"
 #include "log.h"
+
+#define TICK_LENGTH_MS (1000.0f / 20.0f)
 
 int main(void) {
     Window window;
@@ -117,27 +121,36 @@ int main(void) {
     ImGuiListener guiListener;
     window.GetInput()->AddListener(&guiListener);
 
-    double time = glfwGetTime();
-    float delta;
+    RakNet::TimeMS game_time = RakNet::GetTimeMS(), last_update_time = 0;
+    float dt, accumulated_ticks = 0;
+    uint32_t current_tick = 0;
 
     bool show_entity_editor = true;
     while (!window.ShouldClose()) {
-        delta = (float) (glfwGetTime() - time);
-        time = glfwGetTime();
+        dt = (float) (RakNet::GetTimeMS() - game_time);
+        game_time = RakNet::GetTimeMS();
 
         window.UpdateInput();
-        ImGui_ImplGlfwGL3_NewFrame();
 
+        accumulated_ticks += dt / TICK_LENGTH_MS;
+        int ticks_processed = 0;
+        while (accumulated_ticks >= 1 && ticks_processed++ < 10) {
+            accumulated_ticks--;
+            current_tick++;
+        }
+
+        camController.Update(dt);
+
+        ImGui_ImplGlfwGL3_NewFrame();
         ShowEntityEditor(&show_entity_editor, &camera, &entities);
 
-        camController.Update(delta);
         camera.UpdateMatrix(nullptr);
 
         glViewport(0, 0, window.width, window.height);
         g_buffer.Draw();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        mesh_renderer.Render(delta, camera, shadow_camera);
+        mesh_renderer.Render(dt, camera, shadow_camera);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

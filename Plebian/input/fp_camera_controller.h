@@ -11,7 +11,7 @@ public:
     FPCameraController(Camera* cam) :
         camera(cam),
         view_dir(0.0f, 0.0f, -1.0f),
-        speed(5.f),
+        speed(0.005f),
         oldX(0),
         oldY(0) {}
 

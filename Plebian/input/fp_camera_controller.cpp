@@ -1,3 +1,4 @@
+#define NOMINMAX
 #include "fp_camera_controller.h"
 
 #include <GL/glew.h>
