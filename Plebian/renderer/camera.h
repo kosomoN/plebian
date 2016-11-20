@@ -6,11 +6,12 @@
 #include <glm/vec3.hpp>
 
 #include "renderer/window.h"
-#include "components.h"
+#include "transform.h"
 
 class Camera : public WinResizeListener {
 public:
-    void InitOrtho(float cam_width, float cam_height, float near, float far);
+    Camera() {};
+    void InitOrtho(float cam_width, float cam_height, float near_plane, float far_plane);
     void InitPerspective(float cam_width, float cam_height, float fov);
 
     Transform transform;
@@ -26,8 +27,8 @@ private:
     glm::mat4 projectionMatrix;
     glm::vec3 worldForward = glm::vec3(0, 0, -1);
 
-    float near = 0.01f;
-    float far  = 100.0f;
+    float near_plane = 0.01f;
+    float far_plane  = 100.0f;
 
     float width, height;
     float fov;

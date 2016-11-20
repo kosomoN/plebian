@@ -2,11 +2,11 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-void Camera::InitOrtho(float cam_width, float cam_height, float near_, float far_)
+void Camera::InitOrtho(float cam_width, float cam_height, float near_plane_, float far_plane_)
 {
     perspective = false;
-    near = near_;
-    far = far_;
+    near_plane = near_plane_;
+    far_plane = far_plane_;
     Resize(cam_width, cam_height);
     UpdateMatrix(nullptr);
 }
@@ -36,9 +36,9 @@ void Camera::Resize(float cam_width, float cam_height) {
     width = cam_width;
     height = cam_height;
     if (perspective)
-        projectionMatrix = glm::perspective(glm::radians(fov), width / height, near, far);
+        projectionMatrix = glm::perspective(glm::radians(fov), width / height, near_plane, far_plane);
     else
-        projectionMatrix = glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, near, far);
+        projectionMatrix = glm::ortho(-width / 2.0f, width / 2.0f, -height / 2.0f, height / 2.0f, near_plane, far_plane);
 }
 
 void Camera::WindowResized(int width, int height)
