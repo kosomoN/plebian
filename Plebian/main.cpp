@@ -23,6 +23,7 @@
 #include "entity_gui.h"
 #include "renderer/g_buffer.h"
 #include "renderer/light_system.h"
+#include "renderer/blur.h"
 #include "log.h"
 #include "network/network_connection.h"
 #include "network/replica_manager.h"
@@ -55,7 +56,7 @@ int main(void) {
         exit(1);
     }
 
-    TimeMS server_start_time;
+    TimeMS server_start_time = 0;
     bool received_time = false;
     while (!received_time) {
         for (Packet* packet = net_conn.peer->Receive(); packet; net_conn.peer->DeallocatePacket(packet), packet = net_conn.peer->Receive()) {
@@ -141,10 +142,9 @@ int main(void) {
     ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
-
     Camera camera;
     camera.InitPerspective(1280, 720, 60);
-    camera.transform.pos= glm::vec3(0.f, 0.f, 5.f);
+    camera.transform.pos= glm::vec3(0.f, 3.f, 5.f);
     window.resizeListeners.push_back(&camera);
     glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -152,7 +152,6 @@ int main(void) {
     shadow_camera.InitOrtho(16, 16, -10, 10);
     shadow_camera.transform.orientation = glm::rotate(shadow_camera.transform.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
     shadow_camera.UpdateMatrix(nullptr);
-
 
     ShadowMap shadow_map;
     shadow_map.Init(1024, 1024);
@@ -170,7 +169,14 @@ int main(void) {
     Time clock_diff = net_conn.peer->GetClockDifferential(net_conn.peer->GetGUIDFromIndex(0));
     current_tick = (uint32_t)((GetTimeMS() - server_start_time - clock_diff) / TICK_LENGTH_MS);
 
+    Blur blur;
+    blur.Init(window.width, window.height);
+
+    double time = glfwGetTime();
+    float delta;
+
     bool show_entity_editor = true;
+    glClearColor(0, 1, 1, 1);
     while (!window.ShouldClose()) {
         dt = (float) (GetTimeMS() - game_time);
         game_time = GetTimeMS();
@@ -214,16 +220,20 @@ int main(void) {
         camera.UpdateMatrix(nullptr);
 
         glViewport(0, 0, window.width, window.height);
-        g_buffer.Draw();
+        glEnable(GL_DEPTH_TEST);
 
+        g_buffer.Draw();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         mesh_renderer.Render(dt, camera, shadow_camera);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         g_buffer.Read();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         light_system.LightPass(&camera);
+
+        glDisable(GL_DEPTH_TEST);
+
+        g_buffer.ReadOutput();
+        blur.Draw();
 
         ImGui::Render();
         window.SwapBuffers();
