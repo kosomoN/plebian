@@ -33,7 +33,11 @@ bool EntityReplica::QueryRemoteConstruction(Connection_RM3 *sourceConnection)
 
 RM3ActionOnPopConnection EntityReplica::QueryActionOnPopConnection(Connection_RM3 *droppedConnection) const
 {
+#ifdef SERVER
     return QueryActionOnPopConnection_Server(droppedConnection);
+#else
+    return QueryActionOnPopConnection_Client(droppedConnection);
+#endif
 }
 
 RM3QuerySerializationResult EntityReplica::QuerySerialization(Connection_RM3 *destinationConnection)
@@ -47,11 +51,15 @@ RM3QuerySerializationResult EntityReplica::QuerySerialization(Connection_RM3 *de
 
 RM3SerializationResult EntityReplica::Serialize(SerializeParameters *ser)
 {
-    ser->outputBitstream[0].Write(tick_time);
+#ifdef SERVER
+    // TODO Don't serialize timestamp individually for every entity
+    // needs changes to raknet's code
+    ser->outputBitstream[0].Write(server->current_tick);
 
     ComponentHandle<Transform> t = entity.component<Transform>();
     ser->outputBitstream[0].Write<uint8_t>(static_cast<NetworkedComponent*>(t.get())->NetworkID());
     t->Serialize(ser);
+#endif
     return RM3SR_BROADCAST_IDENTICALLY;
 }
 
@@ -59,6 +67,12 @@ void EntityReplica::Deserialize(RakNet::DeserializeParameters *deser)
 {
     entityx::uint32_t packet_tick;
     deser->serializationBitstream[0].Read(packet_tick);
+
+#ifndef SERVER
+    if (game->last_received_snapshot < packet_tick) {
+        game->NewSnapshot(packet_tick);
+    }
+#endif
     
     uint8_t component_id;
     while (deser->serializationBitstream[0].Read<uint8_t>(component_id)) {
@@ -77,7 +91,7 @@ void EntityReplica::Deserialize(RakNet::DeserializeParameters *deser)
         Log(Info, "Component ID %i", component_id);
 
         // if a component fails to deserialize, stop because the packet is probably malformed
-        if (!net_component->Deserialize(deser))
+        if (net_component == nullptr || !net_component->Deserialize(deser))
             break;
     }
 }

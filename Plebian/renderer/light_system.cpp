@@ -41,6 +41,8 @@ bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_heig
 
 void LightSystem::LightPass(Camera* camera)
 {
+    glDisable(GL_CULL_FACE);
+
     glUseProgram(light_shader.shader_program);
     glUniform3fv(glGetUniformLocation(light_shader.shader_program, "cam_pos"), 1, glm::value_ptr(camera->transform.pos));
 
@@ -61,6 +63,8 @@ void LightSystem::LightPass(Camera* camera)
     }
     
     glBindVertexArray(0);
+
+    glEnable(GL_CULL_FACE);
 }
     
 

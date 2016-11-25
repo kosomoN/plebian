@@ -169,6 +169,7 @@
     <ClCompile Include="network\packet_processor.cpp" />
     <ClCompile Include="network\replica_manager.cpp" />
     <ClCompile Include="renderer\blur.cpp" />
+    <ClCompile Include="plebian_game.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\cube_renderer.cpp" />
     <ClCompile Include="renderer\environment_probe.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="network\packet_processor.h" />
     <ClInclude Include="network\replica_manager.h" />
     <ClInclude Include="renderer\blur.h" />
+    <ClInclude Include="plebian_game.h" />
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\cube_renderer.h" />
     <ClInclude Include="renderer\environment_probe.h" />

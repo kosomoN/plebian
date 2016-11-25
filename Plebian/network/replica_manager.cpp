@@ -5,10 +5,9 @@
 
 RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream* allocationIdBitstream, RakNet::ReplicaManager3* replicaManager3)
 {
-    entityx::Entity entity = entity_manager->create();
+    entityx::Entity entity = plebian_game->entity_manager.create();
     entity.assign<Transform>();
-#ifndef SERVER
     entity.assign<TransformHistoryComponent>();
-#endif // !SERVER
-    return new EntityReplica(entity, tick_time);
+
+    return new EntityReplica(entity, plebian_game);
 }

@@ -126,6 +126,9 @@
     <ClCompile Include="components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="plebian_game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="globalsystem.h">
@@ -235,11 +238,15 @@
     </ClInclude>
     <ClInclude Include="network\network_defines.h">
       <Filter>Source Files\network</Filter>
+    </ClInclude>
     <ClInclude Include="renderer\blur.h">
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="renderer\light_system.h">
       <Filter>Source Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="plebian_game.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
