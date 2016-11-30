@@ -1,6 +1,7 @@
 #include "plebian_server.h"
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <RakPeerInterface.h>
 #include <BitStream.h>
@@ -36,6 +37,36 @@ void PlebianServer::StartServer()
     entityx::Entity entity = game.entity_manager.create();
     Transform* transform = entity.assign<Transform>().get();
     transform->pos = glm::vec3(1.0f, 2.0f, 3.0f);
+    MeshComponent* mesh_component = entity.assign<MeshComponent>().get();
+    Mesh mesh;
+    mesh.name = "suzanne.obj";
+    mesh_component->mesh = &mesh;
+    Texture texture;
+    texture.name = "suzanne.png";
+    mesh_component->texture = &texture;
+
+    Mesh mesh2;
+    mesh2.name = "smooth_sphere.obj";
+    Texture texture2;
+    texture2.name = "yellow.png";
+
+    std::vector<std::shared_ptr<EntityReplica>> balls;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            entityx::Entity ent = game.entity_manager.create();
+            Transform* transform2 = ent.assign<Transform>().get();
+            transform2->pos = glm::vec3(i * 1.5f  - 6, 2, j * 1.5f - 6);
+            mesh_component = ent.assign<MeshComponent>().get();
+            mesh_component->mesh = &mesh2;
+            mesh_component->texture = &texture2;
+
+            auto replica = std::shared_ptr<EntityReplica>(new EntityReplica(ent, &game));
+            replica_manager.Reference(replica.get());
+            balls.push_back(replica);
+        }
+    }
+
 
 
     EntityReplica entity_replica(entity, &game);
@@ -118,6 +149,12 @@ void PlebianServer::StartServer()
             }
 
             transform->pos = glm::vec3(cos(TICK_LENGTH_MS * game.current_tick / 500.0) * 3, cos(TICK_LENGTH_MS * game.current_tick / 900.0) * 0.5 + cos(TICK_LENGTH_MS * game.current_tick / 600.0) * 0.1, -sin(TICK_LENGTH_MS * game.current_tick / 500.0) * 3);
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    balls[i * 8 + j]->entity.component<Transform>()->pos.y = cos(game.current_tick * 0.05 + i / 2.f) * 0.8124f + sin(game.current_tick * 0.073498f + j / 2.f);
+                }
+            }
 
             game.current_tick++;
             accumulated_ticks--;

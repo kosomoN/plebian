@@ -54,6 +54,7 @@ RM3SerializationResult EntityReplica::Serialize(SerializeParameters *ser)
 
     //TODO clean up
     entity.component<Transform>()->Serialize(ser);
+    entity.component<MeshComponent>()->Serialize(ser);
 
     return RM3SR_BROADCAST_IDENTICALLY;
 }

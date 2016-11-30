@@ -1,6 +1,11 @@
 #ifndef MESH_H_
 #define MESH_H_
 
+#ifdef SERVER
+struct Mesh {
+    std::string name;
+};
+#else
 #include <GL/glew.h>
 
 struct Mesh {
@@ -11,6 +16,7 @@ struct Mesh {
 	GLuint vertex_array_object;
 	GLsizei num_indices;
 };
+#endif
 
 struct Material {
     Material() {}
