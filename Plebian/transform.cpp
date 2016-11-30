@@ -30,7 +30,7 @@ bool Transform::Deserialize(RakNet::DeserializeParameters *deser)
 }
 
 void TransformHistoryComponent::AddState(glm::vec3 pos, glm::quat orientation, uint32_t timestamp) {
-    if (timestamp < states[0].timestamp) return;
+    if (timestamp <= states[0].timestamp) return;
 
     for (int i = LERP_HISTORY_LENGTH - 1; i > 0; i--) {
         states[i] = states[i - 1];
