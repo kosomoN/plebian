@@ -279,10 +279,11 @@ struct Component : public BaseComponent {
   typedef ComponentHandle<Derived> Handle;
   typedef ComponentHandle<const Derived, const EntityManager> ConstHandle;
 
-private:
-  friend class EntityManager;
   /// Used internally for registration.
   static Family family();
+
+private:
+  friend class EntityManager;
 };
 
 
