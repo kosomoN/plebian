@@ -5,8 +5,7 @@
 #include "components.h"
 #include "transform.h"
 #include "log.h"
-
-using namespace entityx;
+#include "renderer/mesh_renderer.h"
 
 void EntityReplica::WriteAllocationID(Connection_RM3 *destinationConnection, BitStream *allocationIdBitstream) const
 {
@@ -51,53 +50,55 @@ RM3QuerySerializationResult EntityReplica::QuerySerialization(Connection_RM3 *de
 
 RM3SerializationResult EntityReplica::Serialize(SerializeParameters *ser)
 {
-#ifdef SERVER
-    // TODO Don't serialize timestamp individually for every entity
-    // needs changes to raknet's code
-    ser->outputBitstream[0].Write(server->current_tick);
+    ser->messageTimestamp = game->current_tick;
 
-    ComponentHandle<Transform> t = entity.component<Transform>();
-    ser->outputBitstream[0].Write<uint8_t>(static_cast<NetworkedComponent*>(t.get())->NetworkID());
-    t->Serialize(ser);
-#endif
+    //TODO clean up
+    entity.component<Transform>()->Serialize(ser);
+
     return RM3SR_BROADCAST_IDENTICALLY;
 }
 
 void EntityReplica::Deserialize(RakNet::DeserializeParameters *deser)
 {
-    entityx::uint32_t packet_tick;
-    deser->serializationBitstream[0].Read(packet_tick);
+    uint32_t packet_tick = deser->timeStamp;
 
-#ifndef SERVER
-    if (game->last_received_snapshot < packet_tick) {
+    if (packet_tick != 0 && game->last_received_snapshot < packet_tick) {
         game->NewSnapshot(packet_tick);
     }
-#endif
     
-    uint8_t component_id;
-    while (deser->serializationBitstream[0].Read<uint8_t>(component_id)) {
-        size_t component_family = ComponentIDToFamily[component_id];
-        NetworkedComponent* net_component = static_cast<NetworkedComponent*>(entity.component(component_family));
+    for (int i = 0; i < RM3_NUM_OUTPUT_BITSTREAM_CHANNELS; i++) {
+        if (!deser->bitstreamWrittenTo[i])
+            continue;
 
-        // if the component has a transform history component, let it deserialize
-        if (component_family == Transform::Family()) {
-            if (entity.has_component<TransformHistoryComponent>()) {
-                if (!entity.component<TransformHistoryComponent>()->DeserializeState(deser, packet_tick))
-                    break;
-                continue;
+        uint8_t component_id;
+        while (deser->serializationBitstream[i].Read<uint8_t>(component_id)) {
+            if (component_id >= sizeof(ComponentIDToFamily) / sizeof(ComponentIDToFamily[0]))
+                break;
+
+            size_t component_family = ComponentIDToFamily[component_id];
+            NetworkedComponent* net_component = static_cast<NetworkedComponent*>(entity.component(component_family));
+
+            // if the component has a transform history component, let it deserialize
+            if (component_family == Transform::Family()) {
+                if (entity.has_component<TransformHistoryComponent>()) {
+                    if (!entity.component<TransformHistoryComponent>()->DeserializeState(deser))
+                        break;
+                    continue;
+                }
             }
+
+            // if a component fails to deserialize, stop because the packet is probably malformed
+            if (net_component == nullptr || !net_component->Deserialize(deser, game))
+                break;
         }
-
-        Log(Info, "Component ID %i", component_id);
-
-        // if a component fails to deserialize, stop because the packet is probably malformed
-        if (net_component == nullptr || !net_component->Deserialize(deser))
-            break;
     }
 }
 
 void EntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
+#ifndef SERVER
+    game->mesh_renderer->UnregisterEntity(entity);
+#endif
     entity.destroy();
     delete this;
 }

@@ -246,7 +246,7 @@
       <Filter>Source Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="plebian_game.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

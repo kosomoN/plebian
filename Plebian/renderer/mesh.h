@@ -13,9 +13,10 @@ struct Mesh {
 };
 
 struct Material {
+    Material() {}
     Material(float roughness, float metallic)
             : roughness(roughness), metallic(metallic) {}
-    float roughness = 0, metallic = 0;
+    float roughness = 1, metallic = 1;
 };
 
 

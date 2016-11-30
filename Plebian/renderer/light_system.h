@@ -12,7 +12,7 @@
 
 class LightSystem : public WinResizeListener {
 public:
-    bool Init(MeshLoader mesh_loader, int screen_width, int screen_height);
+    bool Init(MeshLoader* mesh_loader, int screen_width, int screen_height);
 
     void LightPass(Camera* camera);
 

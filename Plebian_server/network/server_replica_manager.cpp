@@ -5,7 +5,7 @@
 
 RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream* allocationIdBitstream, RakNet::ReplicaManager3* replicaManager3)
 {
-    entityx::Entity entity = server->entity_manager.create();
+    entityx::Entity entity = game->entity_manager.create();
     entity.assign<Transform>();
     return new EntityReplica(entity, server);
 }

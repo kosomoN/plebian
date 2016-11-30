@@ -42,8 +42,11 @@
     <ClCompile Include="plebian_server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="network\server_replica_manager.cpp">
+    <ClCompile Include="..\Plebian\network\replica_manager.cpp">
       <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="plebian_game.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +74,16 @@
     <ClInclude Include="plebian_server.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\server_replica_manager.h">
+    <ClInclude Include="..\Plebian\renderer\mesh.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\renderer\texture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\plebian_game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Plebian\network\replica_manager.h">
       <Filter>Source Files\network</Filter>
     </ClInclude>
   </ItemGroup>

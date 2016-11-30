@@ -8,10 +8,11 @@
 #include <NetworkIDManager.h>
 #include <GetTime.h>
 
-#include "network/server_replica_manager.h"
+#include "network/replica_manager.h"
 #include "network/entity_replica.h"
 #include "network/network_defines.h"
 #include "transform.h"
+#include "plebian_game.h"
 
 #define MAX_CLIENTS 16
 #define SERVER_PORT 51851
@@ -23,18 +24,21 @@ void PlebianServer::StartServer()
     RakPeerInterface *peer = RakPeerInterface::GetInstance();
     Packet *packet;
 
-    ReplicaManager replica_manager(this);
+    PlebianGame game;
+
+    ReplicaManager replica_manager(&game);
     RakNet::NetworkIDManager network_id_manager;
     peer->AttachPlugin(&replica_manager);
     replica_manager.SetNetworkIDManager(&network_id_manager);
     // serialize every tick
     replica_manager.SetAutoSerializeInterval(0);
 
-    entityx::Entity entity = entity_manager.create();
+    entityx::Entity entity = game.entity_manager.create();
     Transform* transform = entity.assign<Transform>().get();
     transform->pos = glm::vec3(1.0f, 2.0f, 3.0f);
 
-    EntityReplica entity_replica(entity, this);
+
+    EntityReplica entity_replica(entity, &game);
     replica_manager.Reference(&entity_replica);
 
     SocketDescriptor sd(SERVER_PORT, 0);
@@ -46,7 +50,7 @@ void PlebianServer::StartServer()
     TimeMS start_time = GetTimeMS();
     double game_time, last_update_time = 0, dt, accumulated_ticks = 0;
 
-    current_tick = (GetTimeMS() - start_time) / TICK_LENGTH_MS;
+    game.current_tick = (GetTimeMS() - start_time) / TICK_LENGTH_MS;
 
     while (!should_close)
     {
@@ -57,7 +61,7 @@ void PlebianServer::StartServer()
         accumulated_ticks += dt / TICK_LENGTH_MS;
         if (accumulated_ticks >= 1)
         {
-            printf("Tick %i\n", current_tick);
+            printf("Tick %i\n", game.current_tick);
             while (packet = peer->Receive())
             {
                 switch (packet->data[0])
@@ -113,9 +117,9 @@ void PlebianServer::StartServer()
                 peer->DeallocatePacket(packet);
             }
 
-            transform->pos = glm::vec3(cos(TICK_LENGTH_MS * current_tick / 500.0) * 3, cos(TICK_LENGTH_MS * current_tick / 900.0) * 0.5 + cos(TICK_LENGTH_MS * current_tick / 600.0) * 0.1, -sin(TICK_LENGTH_MS * current_tick / 500.0) * 3);
+            transform->pos = glm::vec3(cos(TICK_LENGTH_MS * game.current_tick / 500.0) * 3, cos(TICK_LENGTH_MS * game.current_tick / 900.0) * 0.5 + cos(TICK_LENGTH_MS * game.current_tick / 600.0) * 0.1, -sin(TICK_LENGTH_MS * game.current_tick / 500.0) * 3);
 
-            current_tick++;
+            game.current_tick++;
             accumulated_ticks--;
         }
     }

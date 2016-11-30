@@ -151,9 +151,10 @@
     <ClCompile Include="..\Plebian\network\entity_replica.cpp" />
     <ClCompile Include="..\Plebian\network\network_connection.cpp" />
     <ClCompile Include="..\Plebian\network\packet_processor.cpp" />
+    <ClCompile Include="..\Plebian\network\replica_manager.cpp" />
     <ClCompile Include="..\Plebian\transform.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="network\server_replica_manager.cpp" />
+    <ClCompile Include="plebian_game.cpp" />
     <ClCompile Include="plebian_server.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +163,12 @@
     <ClInclude Include="..\Plebian\network\entity_replica.h" />
     <ClInclude Include="..\Plebian\network\network_connection.h" />
     <ClInclude Include="..\Plebian\network\packet_processor.h" />
+    <ClInclude Include="..\Plebian\network\replica_manager.h" />
+    <ClInclude Include="..\Plebian\plebian_game.h" />
+    <ClInclude Include="..\Plebian\renderer\mesh.h" />
+    <ClInclude Include="..\Plebian\renderer\texture.h" />
     <ClInclude Include="..\Plebian\transform.h" />
     <ClInclude Include="client.h" />
-    <ClInclude Include="network\server_replica_manager.h" />
     <ClInclude Include="plebian_server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

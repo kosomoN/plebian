@@ -10,6 +10,7 @@
 #include <ReplicaManager3.h>
 
 #include "components.h"
+#include "plebian_game.h"
 
 struct Transform : entityx::Component<Transform>, public NetworkedComponent {
     glm::vec3 pos;
@@ -20,7 +21,7 @@ struct Transform : entityx::Component<Transform>, public NetworkedComponent {
 
     virtual uint8_t NetworkID();
     virtual void Serialize(RakNet::SerializeParameters *serialize_parameters);
-    virtual bool Deserialize(RakNet::DeserializeParameters *deserialize_parameters);
+    virtual bool Deserialize(RakNet::DeserializeParameters *deserialize_parameters, PlebianGame* game);
 private:
     void ParentWorldSpace(glm::mat4& child);
 };
@@ -36,7 +37,7 @@ struct TransformHistoryComponent
     };
 
     void AddState(glm::vec3 pos, glm::quat orientation, uint32_t timestamp);
-    bool DeserializeState(RakNet::DeserializeParameters *deserialization_parameters, uint32_t timestamp);
+    bool DeserializeState(RakNet::DeserializeParameters *deserialization_parameters);
     void ReadState(float lerp_time, glm::vec3& pos, glm::quat& orientation);
 private:
     State states[LERP_HISTORY_LENGTH];

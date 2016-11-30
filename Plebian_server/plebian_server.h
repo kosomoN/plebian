@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <entityx/entityx.h>
+#include <cstddef>
 
 #include "client.h"
 
@@ -15,13 +16,7 @@ private:
         }
     };
 public:
-    PlebianServer() : entity_manager(events) {}
     void StartServer();
-
-    uint32_t current_tick = 0;
-
-    entityx::EventManager events;
-    entityx::EntityManager entity_manager;
 
     std::unordered_map<RakNet::RakNetGUID, Client*, GuidHasher> clients;
 };

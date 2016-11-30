@@ -18,14 +18,15 @@ void Transform::ParentWorldSpace(glm::mat4& child) {
 
 void Transform::Serialize(RakNet::SerializeParameters *ser)
 {
-    ser->outputBitstream->WriteVector(pos.x, pos.y, pos.z);
-    ser->outputBitstream->WriteNormQuat(orientation.x, orientation.y, orientation.z, orientation.w);
+    ser->outputBitstream[0].Write<uint8_t>(NetworkID());
+    ser->outputBitstream[0].WriteVector(pos.x, pos.y, pos.z);
+    ser->outputBitstream[0].WriteNormQuat(orientation.x, orientation.y, orientation.z, orientation.w);
 }
 
-bool Transform::Deserialize(RakNet::DeserializeParameters *deser)
+bool Transform::Deserialize(RakNet::DeserializeParameters *deser, PlebianGame* game)
 {
-    if (!deser->serializationBitstream->ReadVector(pos.x, pos.y, pos.z)) return false;
-    if (!deser->serializationBitstream->ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
+    if (!deser->serializationBitstream[0].ReadVector(pos.x, pos.y, pos.z)) return false;
+    if (!deser->serializationBitstream[0].ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
     return true;
 }
 
@@ -41,14 +42,14 @@ void TransformHistoryComponent::AddState(glm::vec3 pos, glm::quat orientation, u
     states[0].initialized = true;
 }
 
-bool TransformHistoryComponent::DeserializeState(RakNet::DeserializeParameters *deser, uint32_t timestamp)
+bool TransformHistoryComponent::DeserializeState(RakNet::DeserializeParameters *deser)
 {
     glm::vec3 pos;
     glm::quat orientation;
-    if (!deser->serializationBitstream->ReadVector(pos.x, pos.y, pos.z)) return false;
-    if (!deser->serializationBitstream->ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
+    if (!deser->serializationBitstream[0].ReadVector(pos.x, pos.y, pos.z)) return false;
+    if (!deser->serializationBitstream[0].ReadNormQuat(orientation.x, orientation.y, orientation.z, orientation.w)) return false;
 
-    AddState(pos, orientation, timestamp);
+    AddState(pos, orientation, deser->timeStamp);
 
     return true;
 }

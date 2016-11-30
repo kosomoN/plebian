@@ -9,28 +9,28 @@
 
 class ReplicaConnection : public RakNet::Connection_RM3 {
 public:
-    ReplicaConnection(const RakNet::SystemAddress& systemAddress_, RakNet::RakNetGUID guid_, PlebianGame* plebian_game)
-        : Connection_RM3(systemAddress_, guid_), plebian_game(plebian_game) {}
+    ReplicaConnection(const RakNet::SystemAddress& systemAddress_, RakNet::RakNetGUID guid_, PlebianGame* game)
+        : Connection_RM3(systemAddress_, guid_), game(game) {}
 
     virtual RakNet::Replica3* AllocReplica(RakNet::BitStream *allocationIdBitstream, RakNet::ReplicaManager3 *replicaManager3);
 
 private:
-    PlebianGame* plebian_game;
+    PlebianGame* game;
 };
 
 class ReplicaManager : public RakNet::ReplicaManager3 {
 public:
-    ReplicaManager(PlebianGame* plebian_game) : plebian_game(plebian_game) {}
+    ReplicaManager(PlebianGame* game) : game(game) {}
 
     virtual RakNet::Connection_RM3* AllocConnection(const RakNet::SystemAddress& systemAddress, RakNet::RakNetGUID rakNetGUID) const {
-        return new ReplicaConnection(systemAddress, rakNetGUID, plebian_game);
+        return new ReplicaConnection(systemAddress, rakNetGUID, game);
     }
     virtual void DeallocConnection(RakNet::Connection_RM3* connection) const {
         delete connection;
     }
 
 private:
-    PlebianGame* plebian_game;
+    PlebianGame* game;
 };
 
 #endif // REPLICA_MANAGER_H_

@@ -33,7 +33,13 @@
 using namespace RakNet;
 
 int main(void) {
-    PlebianGame plebian_game;
+    PlebianGame game;
+    MeshLoader mesh_loader;
+    TextureLoader texture_loader;
+    MeshRenderer mesh_renderer;
+    game.mesh_loader = &mesh_loader;
+    game.texture_loader = &texture_loader;
+    game.mesh_renderer = &mesh_renderer;
 
     NetworkConnection net_conn;
     StartupResult raknet_startup = net_conn.Startup();
@@ -42,7 +48,7 @@ int main(void) {
         exit(1);
     }
 
-    ReplicaManager replica_manager(&plebian_game);
+    ReplicaManager replica_manager(&game);
     RakNet::NetworkIDManager network_id_manager;
     net_conn.peer->AttachPlugin(&replica_manager);
     replica_manager.SetNetworkIDManager(&network_id_manager);
@@ -91,10 +97,8 @@ int main(void) {
     }
     window.resizeListeners.push_back(&g_buffer);
 
-    MeshLoader mesh_loader;
-
     LightSystem light_system;
-    if (!light_system.Init(mesh_loader, window.width, window.height)) {
+    if (!light_system.Init(game.mesh_loader, window.width, window.height)) {
         Log(Error, "Failed to initialize light system");
         exit(1);
     }
@@ -104,42 +108,29 @@ int main(void) {
     point_light->intensity = glm::vec3(10.0f, 10.0f, 10.f);
     point_light->radius = 20;
 
-    MeshRenderer mesh_renderer;
     Shader shader;
     shader.Init("basic.glsl");
 
     Shader shadow_pass;
     shadow_pass.Init("shadow_pass.glsl");
 
-    TextureLoader texture_loader;
-
-    entityx::Entity ent = plebian_game.entity_manager.create();
+    entityx::Entity ent = game.entity_manager.create();
     Transform* monkey_transform = ent.assign<Transform>().get();
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
-    ent = plebian_game.entity_manager.create();
+    ent = game.entity_manager.create();
     Transform* transform = ent.assign<Transform>().get();
     transform->pos = glm::vec3(0.0f, 10.0f, 0.0f);
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture2d("mona_lisa.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture2d("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
 
     point_light->transform = transform;
 
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            ent = plebian_game.entity_manager.create();
-            transform = ent.assign<Transform>().get();
-            transform->pos = glm::vec3(i * 1.5f  - 6, 0, j * 1.5f - 6);
-            ent.assign<MeshComponent>(mesh_loader.GetMesh("smooth_sphere.obj"), Material((i + 1) / 8.0f, j / 7.0f), &shader, texture_loader.GetTexture2d("yellow.png"));
-            mesh_renderer.RegisterEntity(ent);
-        }
-    }
-
-    ent = plebian_game.entity_manager.create();
+    ent = game.entity_manager.create();
     transform = ent.assign<Transform>().get();
     transform->pos.y = -2.5f;
-    ent.assign<MeshComponent>(mesh_loader.GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
     Camera camera;
@@ -188,33 +179,29 @@ int main(void) {
             if (ticks_processed++ > 10) {
                 Log(Warn, "Can't keep up with the tick rate!");
                 // reset accumulated ticks to zero
-                plebian_game.current_tick += (uint32_t)accumulated_ticks;
+                game.current_tick += (uint32_t)accumulated_ticks;
                 accumulated_ticks = accumulated_ticks - floor(accumulated_ticks);
             }
 
             accumulated_ticks--;
-            plebian_game.current_tick++;
+            game.current_tick++;
         }
-        plebian_game.current_tick_fraction = accumulated_ticks;
+        game.current_tick_fraction = accumulated_ticks;
 
-        // just a hack until proper entity factories are made
-        // sets the monkey's position to the last created entity which is the networked one
-        int count = 0;
-        for (entityx::Entity entity : plebian_game.entity_manager.entities_for_debugging()) {
-            count++;
-            if (count == 68) {
-                entity.component<TransformHistoryComponent>().get()->ReadState(plebian_game.current_tick + plebian_game.current_tick_fraction - 1.8f + plebian_game.server_time_delta, monkey_transform->pos, monkey_transform->orientation);
-            }
-        }
         Packet* packet;
         for (packet = net_conn.peer->Receive(); packet; net_conn.peer->DeallocatePacket(packet), packet = net_conn.peer->Receive())
         {
         }
 
+        // interpolate transforms
+        game.entity_manager.each<Transform, TransformHistoryComponent>([&game](entityx::Entity entity, Transform& transform, TransformHistoryComponent& hist) {
+            hist.ReadState(game.current_tick + game.current_tick_fraction - 1.8f + game.server_time_delta, transform.pos, transform.orientation);
+        });
+
         camController.Update(dt);
 
         ImGui_ImplGlfwGL3_NewFrame();
-        ShowEntityEditor(&show_entity_editor, &camera, &plebian_game.entity_manager);
+        ShowEntityEditor(&show_entity_editor, &camera, &game.entity_manager);
 
         camera.UpdateMatrix(nullptr);
 

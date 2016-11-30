@@ -6,7 +6,7 @@
 #include "renderer/g_buffer.h"
 #include <io/textureloader.h>
 
-bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_height)
+bool LightSystem::Init(MeshLoader* mesh_loader, int screen_width, int screen_height)
 {
 	std::string** textures;
 	textures = new std::string*[1];
@@ -18,7 +18,7 @@ bool LightSystem::Init(MeshLoader mesh_loader, int screen_width, int screen_heig
 	textures[0][4] = "posz.png";
 	textures[0][5] = "negz.png";
 	//cubemap = TextureLoader().GetTexture3d(textures, 1);
-    sphere_mesh = mesh_loader.GetMesh("sphere.obj");
+    sphere_mesh = mesh_loader->GetMesh("sphere.obj");
     if (sphere_mesh == nullptr) {
         Log(Error, "Failed to load sphere mesh for light system");
         return false;
