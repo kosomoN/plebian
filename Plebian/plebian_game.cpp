@@ -29,6 +29,10 @@ void PlebianGame::NewSnapshot(uint32_t snapshot_time)
             server_time_delta += 1.0f / TICK_LENGTH_MS;
         else if (current_tick >= snapshot_time)
             server_time_delta -= 1.0f / TICK_LENGTH_MS;
-
     }
+}
+
+void PlebianGame::UpdateServerTime()
+{
+    server_time = current_tick + current_tick_fraction + server_time_delta - lerp_amount;
 }

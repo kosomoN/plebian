@@ -193,9 +193,12 @@ int main(void) {
         {
         }
 
+        // update time for rendering
+        game.UpdateServerTime();
+
         // interpolate transforms
         game.entity_manager.each<Transform, TransformHistoryComponent>([&game](entityx::Entity entity, Transform& transform, TransformHistoryComponent& hist) {
-            hist.ReadState(game.current_tick + game.current_tick_fraction - 1.8f + game.server_time_delta, transform.pos, transform.orientation);
+            hist.ReadState(game.server_time, transform.pos, transform.orientation);
         });
 
         camController.Update(dt);

@@ -12,6 +12,7 @@ struct PlebianGame {
     PlebianGame() : entity_manager(events) {}
 
     void NewSnapshot(uint32_t snapshot_time);
+    void UpdateServerTime();
 
     entityx::EventManager events;
     entityx::EntityManager entity_manager;
@@ -25,6 +26,10 @@ struct PlebianGame {
     float current_tick_fraction = 0.0f;
     uint32_t last_received_snapshot = 0;
 
+    // how many ticks backwards to lerp
+    float lerp_amount = 1.8f;
+    // time that everything is rendered at
+    float server_time = 0.0;
     // difference between snapshot timestamp and client time when a snapshot is received
     float server_time_delta = 0.0f;
 };
