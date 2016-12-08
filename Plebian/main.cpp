@@ -139,11 +139,6 @@ int main(void) {
     window.resizeListeners.push_back(&camera);
     glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    Camera shadow_camera;
-    shadow_camera.InitOrtho(16, 16, -10, 10);
-    shadow_camera.transform.orientation = glm::rotate(shadow_camera.transform.orientation, glm::radians(90.0f), glm::vec3(1, 0, 0));
-    shadow_camera.UpdateMatrix(nullptr);
-
     ShadowMap shadow_map;
     shadow_map.Init(1024, 1024);
 
@@ -213,7 +208,7 @@ int main(void) {
 
         g_buffer.Draw();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        mesh_renderer.Render(dt, camera, shadow_camera);
+        mesh_renderer.Render(dt, camera, shader.shader_program);
 
         g_buffer.Read();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

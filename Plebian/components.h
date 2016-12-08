@@ -20,10 +20,9 @@ struct NetworkedComponent {
 struct MeshComponent : public entityx::Component<MeshComponent>, public NetworkedComponent {
     MeshComponent() {}
     MeshComponent(Mesh* mesh, Material material, Shader* shader, Texture* texture)
-        : mesh(mesh), material(material), shader(shader), texture(texture) {}
+        : mesh(mesh), material(material), texture(texture) {}
     Mesh* mesh = nullptr;
     Material material;
-    Shader* shader = nullptr;
     Texture* texture = nullptr;
 
     virtual uint8_t NetworkID();

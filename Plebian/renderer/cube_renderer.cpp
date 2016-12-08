@@ -38,7 +38,6 @@ Texture* CubeRenderer::SampleCubemap(EnvironmentProbe* probe)
 
 	for (int i = 0; i < 6; i++) {
 		m_p_renderCamera->UpdateMatrix(&views[i]);
-		m_p_renderer->Render(0, *m_p_renderCamera, m_lightCamera);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		glReadPixels(0, 0, m_w, m_h, GL_RGB, GL_UNSIGNED_BYTE, &data[0][i]);
 	}

@@ -8,13 +8,12 @@
 
 class MeshRenderer {
 public:
-    void Render(float delta, Camera& camera, Camera& light_camera, GLuint shader = 0);
+    void Render(float delta, Camera& camera, GLuint shader);
     void RegisterEntity(entityx::Entity entity);
     void UnregisterEntity(entityx::Entity entity);
 private:
     std::vector<entityx::Entity> entities;
-    GLuint current_shader = 0,
-           current_tex    = 0;
+    GLuint current_tex = 0;
 };
 
 #endif MESH_RENDERER_H_
