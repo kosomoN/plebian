@@ -3,24 +3,18 @@
 
 #include <io/textureloader.h>
 
-#include "texture.h"
 #include "mesh_renderer.h"
 #include "camera.h"
 #include "environment_probe.h"
 
 class CubeRenderer {
 public:
-	CubeRenderer(MeshRenderer* renderer, Camera& lightCamera, TextureLoader& textureLoader, int w, int h);
-	~CubeRenderer();
+	CubeRenderer(MeshRenderer* renderer, Camera& lightCamera, TextureLoader& textureLoader);
 
-	Texture* SampleCubemap(EnvironmentProbe* probe);
+    void UpdateCubemap(EnvironmentProbe* probe);
 private:
-	MeshRenderer* m_p_renderer;
-	Camera m_lightCamera;
-	Camera* m_p_renderCamera;
-	TextureLoader m_textureLoader;
-	int m_w, m_h;
-
+	MeshRenderer* renderer;
+	Camera camera;
 };
 
 #endif

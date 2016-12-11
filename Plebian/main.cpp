@@ -135,7 +135,7 @@ int main(void) {
 
     Camera camera;
     camera.InitPerspective(1280, 720, 60);
-    camera.transform.pos= glm::vec3(0.f, 3.f, 5.f);
+    camera.transform.pos = glm::vec3(0.f, 3.f, 5.f);
     window.resizeListeners.push_back(&camera);
     glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -161,7 +161,6 @@ int main(void) {
     float delta;
 
     bool show_entity_editor = true;
-    glClearColor(0, 1, 1, 1);
     while (!window.ShouldClose()) {
         dt = (float) (GetTimeMS() - game_time);
         game_time = GetTimeMS();
@@ -201,7 +200,7 @@ int main(void) {
         ImGui_ImplGlfwGL3_NewFrame();
         ShowEntityEditor(&show_entity_editor, &camera, &game.entity_manager);
 
-        camera.UpdateMatrix(nullptr);
+        camera.UpdateMatrix();
 
         glViewport(0, 0, window.width, window.height);
         glEnable(GL_DEPTH_TEST);

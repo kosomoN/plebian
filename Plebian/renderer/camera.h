@@ -16,7 +16,7 @@ public:
 
     Transform transform;
 	glm::mat4 combined;
-    void UpdateMatrix(glm::mat4* view);
+    void UpdateMatrix();
     void SetFOV(float fov);
     void Resize(float width, float height);
 
