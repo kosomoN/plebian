@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // TODO implement proper light system
-void MeshRenderer::Render(float delta, Camera& cam, GLuint shader) {
+void MeshRenderer::Render(Camera& cam, GLuint shader) {
     // matrix to transform range [-1,1] to [0,1]
      glm::mat4 biasMatrix(
             0.5, 0.0, 0.0, 0.0,

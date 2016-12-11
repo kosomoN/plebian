@@ -41,6 +41,14 @@ int main(void) {
     game.texture_loader = &texture_loader;
     game.mesh_renderer = &mesh_renderer;
 
+    Window window;
+    if (!window.Init(1280, 720)) {
+        Log(Error, "Failed to initialize window");
+        exit(1);
+    }
+
+    game.Init();
+
     NetworkConnection net_conn;
     StartupResult raknet_startup = net_conn.Startup();
     if (raknet_startup != RAKNET_STARTED) {
@@ -76,11 +84,6 @@ int main(void) {
         }
     }
 
-    Window window;
-    if (!window.Init(1280, 720)) {
-        Log(Error, "Failed to initialize window");
-        exit(1);
-    }
     window.SetInput(new Input);
     window.GetInput()->Init(window.GetWindow());
 
@@ -96,6 +99,7 @@ int main(void) {
         exit(1);
     }
     window.resizeListeners.push_back(&g_buffer);
+    game.g_buffer = &g_buffer;
 
     LightSystem light_system;
     if (!light_system.Init(game.mesh_loader, window.width, window.height)) {
@@ -103,26 +107,24 @@ int main(void) {
         exit(1);
     }
     window.resizeListeners.push_back(&light_system);
+    game.light_system = &light_system;
 
     PointLight* point_light = light_system.CreatePointLight();
     point_light->intensity = glm::vec3(10.0f, 10.0f, 10.f);
     point_light->radius = 20;
-
-    Shader shader;
-    shader.Init("basic.glsl");
 
     Shader shadow_pass;
     shadow_pass.Init("shadow_pass.glsl");
 
     entityx::Entity ent = game.entity_manager.create();
     Transform* monkey_transform = ent.assign<Transform>().get();
-    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("suzanne.obj"), Material(0.1f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("suzanne.obj"), Material(0.1f, 0.9f), texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
     ent = game.entity_manager.create();
     Transform* transform = ent.assign<Transform>().get();
     transform->pos = glm::vec3(0.0f, 10.0f, 0.0f);
-    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("torus.obj"), Material(0.4f, 0.2f), &shader, texture_loader.GetTexture2d("mona_lisa.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("torus.obj"), Material(0.4f, 0.2f), texture_loader.GetTexture2d("mona_lisa.png"));
     mesh_renderer.RegisterEntity(ent);
 
     point_light->transform = transform;
@@ -130,7 +132,7 @@ int main(void) {
     ent = game.entity_manager.create();
     transform = ent.assign<Transform>().get();
     transform->pos.y = -2.5f;
-    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("plane.obj"), Material(0.9f, 0.9f), &shader, texture_loader.GetTexture2d("suzanne.png"));
+    ent.assign<MeshComponent>(game.mesh_loader->GetMesh("plane.obj"), Material(0.9f, 0.9f), texture_loader.GetTexture2d("suzanne.png"));
     mesh_renderer.RegisterEntity(ent);
 
     Camera camera;
@@ -197,26 +199,12 @@ int main(void) {
 
         camController.Update(dt);
 
+        game.RenderFrame(camera, 0);
+
         ImGui_ImplGlfwGL3_NewFrame();
         ShowEntityEditor(&show_entity_editor, &camera, &game.entity_manager);
 
         camera.UpdateMatrix();
-
-        glViewport(0, 0, window.width, window.height);
-        glEnable(GL_DEPTH_TEST);
-
-        g_buffer.Draw();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        mesh_renderer.Render(dt, camera, shader.shader_program);
-
-        g_buffer.Read();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        light_system.LightPass(&camera);
-
-        glDisable(GL_DEPTH_TEST);
-
-        g_buffer.ReadOutput();
-        blur.Draw();
 
         ImGui::Render();
         window.SwapBuffers();

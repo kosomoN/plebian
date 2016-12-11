@@ -9,12 +9,12 @@
 
 class CubeRenderer {
 public:
-	CubeRenderer(MeshRenderer* renderer, Camera& lightCamera, TextureLoader& textureLoader);
+	CubeRenderer(PlebianGame* game);
 
     void UpdateCubemap(EnvironmentProbe* probe);
 private:
-	MeshRenderer* renderer;
-	Camera camera;
+    Camera camera;
+    PlebianGame* game = nullptr;
 };
 
 #endif

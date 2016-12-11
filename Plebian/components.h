@@ -19,7 +19,7 @@ struct NetworkedComponent {
 
 struct MeshComponent : public entityx::Component<MeshComponent>, public NetworkedComponent {
     MeshComponent() {}
-    MeshComponent(Mesh* mesh, Material material, Shader* shader, Texture* texture)
+    MeshComponent(Mesh* mesh, Material material, Texture* texture)
         : mesh(mesh), material(material), texture(texture) {}
     Mesh* mesh = nullptr;
     Material material;

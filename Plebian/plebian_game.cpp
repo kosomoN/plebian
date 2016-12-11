@@ -1,7 +1,17 @@
 #include "plebian_game.h"
 
+#include <GL/glew.h>
+
 #include "network/network_defines.h"
 #include "log.h"
+#include "renderer/mesh_renderer.h"
+#include "renderer/g_buffer.h"
+#include "renderer/light_system.h"
+
+bool PlebianGame::Init()
+{
+    return default_shader.Init("basic.glsl");
+}
 
 #define RESET_TIME (500.0f / TICK_LENGTH_MS)
 
@@ -35,4 +45,19 @@ void PlebianGame::NewSnapshot(uint32_t snapshot_time)
 void PlebianGame::UpdateServerTime()
 {
     server_time = current_tick + current_tick_fraction + server_time_delta - lerp_amount;
+}
+
+void PlebianGame::RenderFrame(Camera& camera, GLuint output_fbo)
+{
+    glViewport(0, 0, g_buffer->width, g_buffer->height);
+    glEnable(GL_DEPTH_TEST);
+
+    g_buffer->Draw();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    mesh_renderer->Render(camera, default_shader.shader_program);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    g_buffer->Read();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    light_system->LightPass(&camera);
 }

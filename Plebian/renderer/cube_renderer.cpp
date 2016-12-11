@@ -2,9 +2,8 @@
 
 #include <glm/glm.hpp>
 
-CubeRenderer::CubeRenderer(MeshRenderer* renderer, Camera& lightCamera, TextureLoader& textureLoader)
+CubeRenderer::CubeRenderer(PlebianGame* game) : game(game)
 {
-	renderer = renderer;
 	camera.InitPerspective(1, 1, 90.f);
 }
 

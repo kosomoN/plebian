@@ -21,13 +21,13 @@ public:
 
     void Draw();
     void Read();
-    void ReadOutput();
 
     virtual void WindowResized(int width, int height);
+
+    int width = 0, height = 0;
 private:
     GLuint fbo = 0;
     GLuint textures[NUM_TEXTURES];
-    GLuint tex_output;
 };
 
 #endif // DEFERRED_RENDERER_H_
