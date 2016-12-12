@@ -94,19 +94,17 @@ int main(void) {
     glFrontFace(GL_CCW);
 
     GBuffer g_buffer;
-    if (!g_buffer.Init(1280, 720)) {
+    if (!g_buffer.Init(window.width, window.width)) {
         Log(Error, "Failed to initialize geometry buffer");
         exit(1);
     }
     window.resizeListeners.push_back(&g_buffer);
-    game.g_buffer = &g_buffer;
 
     LightSystem light_system;
-    if (!light_system.Init(game.mesh_loader, window.width, window.height)) {
+    if (!light_system.Init(game.mesh_loader)) {
         Log(Error, "Failed to initialize light system");
         exit(1);
     }
-    window.resizeListeners.push_back(&light_system);
     game.light_system = &light_system;
 
     PointLight* point_light = light_system.CreatePointLight();
@@ -136,7 +134,7 @@ int main(void) {
     mesh_renderer.RegisterEntity(ent);
 
     Camera camera;
-    camera.InitPerspective(1280, 720, 60);
+    camera.InitPerspective(window.width, window.height, 60.f);
     camera.transform.pos = glm::vec3(0.f, 3.f, 5.f);
     window.resizeListeners.push_back(&camera);
     glfwSetInputMode(window.GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -199,7 +197,7 @@ int main(void) {
 
         camController.Update(dt);
 
-        game.RenderFrame(camera, 0);
+        game.RenderFrame(camera, 0, &g_buffer);
 
         ImGui_ImplGlfwGL3_NewFrame();
         ShowEntityEditor(&show_entity_editor, &camera, &game.entity_manager);

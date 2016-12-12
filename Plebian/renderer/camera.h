@@ -22,6 +22,8 @@ public:
 
 	virtual void WindowResized(int width, int height);
 
+    float GetWidth() { return width; };
+    float GetHeight() { return height; };
 private:
     bool perspective;
     glm::mat4 projectionMatrix;

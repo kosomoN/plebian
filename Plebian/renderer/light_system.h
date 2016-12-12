@@ -10,16 +10,14 @@
 #include "renderer/mesh.h"
 #include "io/meshloader.h"
 
-class LightSystem : public WinResizeListener {
+class LightSystem {
 public:
-    bool Init(MeshLoader* mesh_loader, int screen_width, int screen_height);
+    bool Init(MeshLoader* mesh_loader);
 
     void LightPass(Camera* camera);
 
     PointLight* CreatePointLight();
     DirectionalLight* CreateDirectionalLight();
-
-    virtual void WindowResized(int width, int height);
 private:
     std::vector<PointLight> point_lights;
     std::vector<DirectionalLight> directional_lights;

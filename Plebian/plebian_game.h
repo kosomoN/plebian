@@ -21,7 +21,7 @@ struct PlebianGame {
     void NewSnapshot(uint32_t snapshot_time);
     void UpdateServerTime();
 
-    void RenderFrame(Camera& camera, GLuint output_fbo);
+    void RenderFrame(Camera& camera, GLuint output_fbo, GBuffer* g_buffer);
 
     entityx::EventManager events;
     entityx::EntityManager entity_manager;
@@ -30,7 +30,6 @@ struct PlebianGame {
     TextureLoader* texture_loader = nullptr;
     MeshRenderer* mesh_renderer = nullptr;
     LightSystem* light_system = nullptr;
-    GBuffer* g_buffer = nullptr;
 
     uint32_t current_tick = 0;
     // between 0 and 1, how far in between ticks the engine is

@@ -47,7 +47,7 @@ void PlebianGame::UpdateServerTime()
     server_time = current_tick + current_tick_fraction + server_time_delta - lerp_amount;
 }
 
-void PlebianGame::RenderFrame(Camera& camera, GLuint output_fbo)
+void PlebianGame::RenderFrame(Camera& camera, GLuint output_fbo, GBuffer* g_buffer)
 {
     glViewport(0, 0, g_buffer->width, g_buffer->height);
     glEnable(GL_DEPTH_TEST);
@@ -56,7 +56,7 @@ void PlebianGame::RenderFrame(Camera& camera, GLuint output_fbo)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mesh_renderer->Render(camera, default_shader.shader_program);
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, output_fbo);
     g_buffer->Read();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     light_system->LightPass(&camera);

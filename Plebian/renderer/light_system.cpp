@@ -6,7 +6,7 @@
 #include "renderer/g_buffer.h"
 #include <io/textureloader.h>
 
-bool LightSystem::Init(MeshLoader* mesh_loader, int screen_width, int screen_height)
+bool LightSystem::Init(MeshLoader* mesh_loader)
 {
 	std::string** textures;
 	textures = new std::string*[1];
@@ -34,8 +34,6 @@ bool LightSystem::Init(MeshLoader* mesh_loader, int screen_width, int screen_hei
     glUniform1i(glGetUniformLocation(light_shader.shader_program, "diffuse_tex"), GBuffer::tex_diffuse);
     glUniform1i(glGetUniformLocation(light_shader.shader_program, "normal_tex"), GBuffer::tex_normal);
 
-    glUniform2f(glGetUniformLocation(light_shader.shader_program, "screen_size"), (float) screen_width, (float) screen_height);
-
     return true;
 }
 
@@ -44,6 +42,7 @@ void LightSystem::LightPass(Camera* camera)
     glDisable(GL_CULL_FACE);
 
     glUseProgram(light_shader.shader_program);
+    glUniform2f(glGetUniformLocation(light_shader.shader_program, "screen_size"), camera->GetWidth(), camera->GetHeight());
     glUniform3fv(glGetUniformLocation(light_shader.shader_program, "cam_pos"), 1, glm::value_ptr(camera->transform.pos));
 
     glBindVertexArray(sphere_mesh->vertex_array_object);
@@ -79,9 +78,3 @@ DirectionalLight* LightSystem::CreateDirectionalLight()
     directional_lights.push_back(DirectionalLight());
     return &directional_lights.back();
 }
-
-void LightSystem::WindowResized(int width, int height) {
-    glUseProgram(light_shader.shader_program);
-    glUniform2f(glGetUniformLocation(light_shader.shader_program, "screen_size"), (float) width, (float) height);
-}
-

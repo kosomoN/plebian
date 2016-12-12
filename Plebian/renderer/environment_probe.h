@@ -3,8 +3,6 @@
 
 #include <glm/vec3.hpp>
 #include "texture.h"
-#include "mesh_renderer.h"
-#include "camera.h"
 
 struct EnvironmentProbe {
 	glm::vec3 pos;

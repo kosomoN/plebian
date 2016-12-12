@@ -10,7 +10,6 @@
 #include <ReplicaManager3.h>
 
 #include "components.h"
-#include "plebian_game.h"
 
 struct Transform : entityx::Component<Transform>, public NetworkedComponent {
     glm::vec3 pos;
